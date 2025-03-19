@@ -1,0 +1,29 @@
+return {
+  -- "dgox16/devicon-colorscheme.nvim",
+  -- dependencies = {
+  --   "nvim-tree/nvim-web-devicons",
+  -- },
+  -- config = function()
+  --   require("devicon-colorscheme").setup({
+  --     colors = {
+  --       blue = "#0000ff",
+  --       cyan = "#00ffe6",
+  --       green = "#00ff00",
+  --       magenta = "#ff00ff",
+  --       orange = "#ff8000",
+  --       purple = "#6e00ff",
+  --       red = "#ff0000",
+  --       white = "#ffffff",
+  --       yellow = "#ffff00",
+  --       bright_blue = "#00a1ff",
+  --       bright_cyan = "#00ffe6",
+  --       bright_green = "#00ff00",
+  --       bright_magenta = "#ff00ff",
+  --       bright_orange = "#ff8000",
+  --       bright_purple = "#6e00ff",
+  --       bright_red = "#ff0000",
+  --       bright_yellow = "#ffff00",
+  --     },
+  --   })
+  -- end,
+}

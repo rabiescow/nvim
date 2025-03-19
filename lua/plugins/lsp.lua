@@ -115,11 +115,6 @@ return {
       capabilities = capabilities,
     })
 
-    -- lsp.elmls.setup({
-    --   on_attach = on_attach,
-    --   capabilities = capabilities,
-    -- })
-
     lsp.hls.setup({
       cmd = { "haskell-language-server-wrapper", "--lsp" },
       filetypes = { "haskell", "lhaskell" },
@@ -143,15 +138,15 @@ return {
       capabilities = capabilities,
     })
 
-    -- lsp.jsonls.setup({
-    --   on_attach = on_attach,
-    --   capabilities = capabilities,
-    -- })
+    lsp.jsonls.setup({
+      on_attach = on_attach,
+      capabilities = capabilities,
+    })
 
-    -- lsp.lua_ls.setup({
-    --   on_attach = on_attach,
-    --   capabilities = capabilities,
-    -- })
+    lsp.lua_ls.setup({
+      on_attach = on_attach,
+      capabilities = capabilities,
+    })
 
     lsp.pylsp.setup({
       on_attach = on_attach,
@@ -159,10 +154,10 @@ return {
       filetypes = { "python" },
     })
 
-    -- lsp.sqlls.setup({
-    --   on_attach = on_attach,
-    --   capabilities = capabilities,
-    -- })
+    lsp.sqlls.setup({
+      on_attach = on_attach,
+      capabilities = capabilities,
+    })
 
     lsp.lemminx.setup({
       on_attach = on_attach,
