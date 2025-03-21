@@ -18,16 +18,15 @@ return {
     local mode = {
       "mode",
       fmt = function(str)
-        -- if str == 'INSERT'
-        -- then
-        --   return '   ' .. str .. ' '
-        -- elseif str == 'VISUAL'
-        -- then
-        --   return '   ' .. str .. '   '
-        -- else
-        --   return "   " .. str
-        -- end
-        return "    " .. str .. "   "
+        if str == 'INSERT'
+        then
+          return '   ' .. str .. ' '
+        elseif str == 'VISUAL'
+        then
+          return '   ' .. str .. '   '
+        else
+          return "    " .. str .. "   "
+        end
       end,
     }
 
@@ -35,6 +34,7 @@ return {
       "filetype",
       icons_enabled = true,
     }
+
 
     local filename = {
       "filename",
@@ -75,9 +75,9 @@ return {
     lualine.setup({
       options = {
         icons_enabled = true,
-        theme = "onedark",
-        -- component_separators = { left = "|", right = "󰂶 " },
-        component_separators = { left = "|", right = "> " },
+        theme = "auto",
+        transparent = true,
+        component_separators = { left = "┃", right = "ミ" },
         section_separators = { left = "", right = "" },
         disabled_filetypes = {
           statusline = {},
