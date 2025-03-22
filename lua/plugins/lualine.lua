@@ -18,15 +18,15 @@ return {
     local mode = {
       "mode",
       fmt = function(str)
-        if str == 'INSERT'
-        then
-          return '   ' .. str .. ' '
-        elseif str == 'VISUAL'
-        then
-          return '   ' .. str .. '   '
-        else
-          return "    " .. str .. "   "
-        end
+        -- if str == 'INSERT'
+        -- then
+        -- return '   ' .. str .. ' '
+        -- elseif str == 'VISUAL'
+        -- then
+        return '   ' .. str .. '   '
+        -- else
+        -- return "    " .. str .. "   "
+        -- end
       end,
     }
 

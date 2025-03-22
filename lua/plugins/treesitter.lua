@@ -7,9 +7,9 @@ return {
       "nvim-treesitter/nvim-treesitter-textobjects",
       "windwp/nvim-ts-autotag",
     },
-    init = function()
-      vim.api.nvim_set_var("enfocado_plugins", { "surround" })
-    end,
+    -- init = function()
+    --   vim.api.nvim_set_var("enfocado_plugins", { "surround" })
+    -- end,
     config = function()
       -- import nvim-treesitter plugin
       local treesitter = require("nvim-treesitter.configs")
@@ -79,6 +79,8 @@ return {
         -- Automatically install missing parsers when entering buffer
         -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
         auto_install = true,
+        ignore_install = {},
+        modules = {},
 
         -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
         -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).

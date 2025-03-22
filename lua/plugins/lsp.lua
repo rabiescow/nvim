@@ -13,6 +13,17 @@ return {
     local lsp = require("lspconfig")
     local keymap = vim.keymap
 
+    local capabilities = vim.lsp.protocol.make_client_capabilities()
+    capabilities = vim.tbl_deep_extend('force', capabilities,
+      require('blink.cmp').get_lsp_capabilities({}, false))
+    -- capabilities = vim.tbl_deep_extend('force', {
+    --   textDocument = {
+    --     foldingRange = {
+    --       dynamicRegistration = false,
+    --       lineFoldingOnly = true
+    --     }
+    --   }
+    -- })
     local on_attach = function(client, bufnr)
       -- enable completion triggered by <C-x><C-o>
       vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
@@ -61,7 +72,6 @@ return {
         "additionalTextEdits",
       },
     }
-    local capabilities = require("cmp_nvim_lsp").default_capabilities(c)
 
     lsp.ocamllsp.setup({
       cmd = { "ocamllsp" },

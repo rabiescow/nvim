@@ -62,11 +62,13 @@ vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right win
 vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
 vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 
--- Get hover info on CursorHold
--- local toggleHover = function()
---   vim.api.nvim_create_autocmd({ "CursorHold" }, {
---     pattern = { "*.ml" },
---     callback = vim.lsp.buf.hover,
---   })
--- end
--- keymap.set("n", "<leader>h", toggleHover)
+-- -- Ufo folds
+-- vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
+-- vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
+-- vim.keymap.set('n', 'zr', require('ufo').openFoldsExceptKinds)
+-- vim.keymap.set('n', 'zm', require('ufo').closeFoldsWith) -- closeAllFolds == closeFoldsWith(0)
+
+-- BLOCK TOGGLE
+-- vim.api.nvim_create_user_command('Block', "<CMD>require('block').toggle<CR>", { desc = "TOGGLE" })
+-- vim.api.nvim_create_user_command('BlockOn', "<CMD>require('block').on<CR>", { desc = "ON" })
+-- vim.api.nvim_create_user_command('BlockOff', "<CMD>require('block').off<CR>", { desc = "OFF" })
