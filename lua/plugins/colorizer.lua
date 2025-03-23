@@ -1,9 +1,18 @@
 return {
   "norcalli/nvim-colorizer.lua",
-  -- init = function()
-  --   vim.api.nvim_set_var("enfocado_plugins", "colorizer")
-  -- end,
   config = function()
-    require("colorizer").setup()
+    require("colorizer").setup({
+      DEFAULT_OPTIONS = {
+        RGB = true,
+        RRGGBB = true,
+        names = true,
+        RRGGBBAA = true,
+        rgb_fn = true,
+        hsl_fn = true,
+        css = true,
+        css_fn = true,
+        mode = 'foreground',
+      }
+    })
   end,
 }

@@ -1,3 +1,4 @@
+-- return {}
 return {
   {
     "folke/lazydev.nvim",

@@ -1,3 +1,4 @@
+-- return {}
 return {
   "numToStr/Comment.nvim",
   event = { "BufEnter" },

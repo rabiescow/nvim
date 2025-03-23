@@ -40,6 +40,7 @@ return {
         "biome",
         "lemminx",
         "zls",
+        "hyprls",
       },
       -- auto-install configured servers (with lspconfig)
       automatic_installation = true,

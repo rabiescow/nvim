@@ -23,7 +23,7 @@ return {
         -- enable indentation
         indent = { enable = true },
         -- enable autotagging /w nvim-ts-autotag plugin
-        autotag = { enable = true },
+        -- autotag = { enable = true },
         -- ensure following languages are covered
         ensure_installed = {
           "json",
@@ -70,7 +70,7 @@ return {
             init_selection = "<C-space>",
             node_incremental = "<C-space>",
             scope_incremental = false,
-            node_decremental = "bs",
+            node_decremental = false,
           },
         },
         -- Install parsers synchronously (only applied to `ensure_installed`)
@@ -93,12 +93,12 @@ return {
             lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
             keymaps = {
               -- You can use the capture groups defined in textobjects.scm
-              ["aa"] = "@parameter.outer",
-              ["ia"] = "@parameter.inner",
-              ["af"] = "@function.outer",
-              ["if"] = "@function.inner",
-              ["ac"] = "@class.outer",
-              ["ic"] = "@class.inner",
+              ["<leader>ts"] = "@parameter.outer",
+              ["<leader>tg"] = "@parameter.inner",
+              ["<leader>tfs"] = "@function.outer",
+              ["<leader>tfg"] = "@function.inner",
+              ["<leader>tcs"] = "@class.outer",
+              ["<leader>tcg"] = "@class.inner",
             },
           },
           move = {
@@ -109,12 +109,12 @@ return {
               ["]]"] = "@class.outer",
             },
             goto_next_end = {
-              ["]M"] = "@function.outer",
-              ["]["] = "@class.outer",
+              ["<leader>]"] = "@function.outer",
+              ["<leader>c]"] = "@class.outer",
             },
             goto_previous_start = {
-              ["C-["] = "@function.outer",
-              ["[["] = "@class.outer",
+              ["<leader>["] = "@function.outer",
+              ["<leader>c["] = "@class.outer",
             },
             goto_previous_end = {
               ["[M"] = "@function.outer",
