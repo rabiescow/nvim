@@ -195,11 +195,69 @@ return {
       capabilities = capabilities,
     })
 
-    -- lsp.rust_analyzer.setup({
-    --   cmd = { "rust-analyzer" },
-    --   on_attach = on_attach,
-    --   capabilities = capabilities,
-    -- })
+    lsp.rust_analyzer.setup({
+      on_attach = on_attach,
+      capabilities = capabilities,
+      cmd = { "rust-analyzer" },
+      settings = {
+        ["rust-analyzer"] = {
+          completion = {
+            autoImport = {
+              enable = true,
+            },
+            autoself = {
+              enable = true,
+            },
+            callable = {
+              snippets = "fill_arguments",
+            },
+            limit = 1000,
+            postfix = {
+              enable = true,
+            },
+          },
+          diagnostics = {
+            disables = {},
+            enabled = true,
+            experimental = {
+              enable = true,
+            },
+            remapPrefix = {},
+            warningsAsHint = {},
+            warningsAsInfo = {},
+          },
+          hover = {
+            action = {
+              enable = true,
+              debug = {
+                enable = true,
+              },
+              gotoTypeDef = {
+                enable = true,
+              },
+              implementations = {
+                enable = true,
+              },
+              references = {
+                enable = true,
+              },
+              run = {
+                enable = true,
+              },
+            },
+            documentation = {
+              enable = true,
+              keywords = {
+                enable = true,
+              },
+            },
+            links = {
+              enable = true,
+            },
+          },
+        },
+      },
+    })
 
     lsp.serve_d.setup({
       on_attach = on_attach,
