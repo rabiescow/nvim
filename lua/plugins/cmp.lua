@@ -21,42 +21,10 @@ return {
     "amarz45/nvim-cmp-fonts",
 
     "Snikimonkd/cmp-go-pkgs",
-    -- rust completions
-    {
-      "zjp-CN/nvim-cmp-lsp-rs",
-      ---@type cmp_lsp_rs.Opts
-      opts = {
-        unwanted_prefix = { "color", "ratatui::style::Styled" },
-        kind = function(k)
-          return { k.Module, k.Function }
-        end,
-        combo = {
-          alphabetic_label_but_underscore_last = function()
-            local comparators = require("cmp_lsp_rs").comparators
-            return { comparators.sort_by_label_but_underscore_last }
-          end,
-          recentlyUsed_sortText = function()
-            local compare = require("cmp").config.compare
-            local comparators = require("cmp_lsp_rs").comparators
-            return {
-              compare.recently_used,
-              compare.sort_text,
-              comparators.sort_by_label_but_underscore_last
-            }
-          end,
-        },
-      },
-    },
     { "mtoohey31/cmp-fish", ft = "fish" },
   },
   config = function()
-    local status, cmp = pcall(require, "cmp")
-    if not status then
-      return
-    end
-
-    local luasnip = require("luasnip")
-    local lsp = require("lspconfig")
+    local cmp = require("cmp")
 
     -- <vsnip>
     local has_words_before = function()
@@ -155,11 +123,9 @@ return {
         { name = "path" },
         { name = 'nvim_lsp_signature_help' },
         { name = 'fish' },
-        { name = 'emoji' },
         { name = "git" },
         { name = "rg" },
         { name = "go_pkgs" },
-        { name = "rust" },
 
         option = {
           get_bufnrs = function()
@@ -176,14 +142,14 @@ return {
         fields = { "kind", "abbr", "menu" },
         format = function(entry, item)
           item.kind = cmp_kinds[item.kind] or ""
-          local menu_icons = {
-            lsp_icon = "󱗖 ",
-            path = '🖫',
-            buffer = "󰝹 ",
+          local icons = {
+            nvim_lsp = "󱗖 ",
+            path = "🖫",
+            buffer = "󰝹",
             luasnip = " ",
-            vsnip = ""
+            vsnip = "",
           }
-          item.menu = menu_icons[entry.source.name]
+          item.menu = icons[entry.source.name]
           return item
         end,
       },
@@ -215,26 +181,5 @@ return {
         { name = "cmdline" },
       }),
     })
-  end,
-
-  --@param opts cmp.ConfigSchema
-  opts = function(_, opts)
-    local cmp_lsp_rs = require("cmp_lsp_rs")
-    local comparators = cmp_lsp_rs.comparators
-    local compare = require("cmp").config.compare
-
-    -- opts.sorting.comparators = {
-    --   compare.exact,
-    --   compare.score,
-    --   -- comparators.inherent_import_inscope,
-    --   comparators.inscope_inherent_import,
-    --   comparators.sort_by_label_but_underscore_last,
-    -- }
-
-    -- for _, source in ipairs(opts.sources) do
-    --   cmp_lsp_rs.filter_out.entry_filter(source)
-    -- end
-
-    return opts
   end,
 }
