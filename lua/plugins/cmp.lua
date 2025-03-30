@@ -18,11 +18,35 @@ return {
     "onsails/lspkind.nvim",
     "L3MON4D3/LuaSnip",
     "lukas-reineke/cmp-rg",
+    "amarz45/nvim-cmp-fonts",
 
     "Snikimonkd/cmp-go-pkgs",
-    -- "crazyhulk/cmp-sign",
-    -- "SirVer/ultisnips",
-
+    -- rust completions
+    {
+      "zjp-CN/nvim-cmp-lsp-rs",
+      ---@type cmp_lsp_rs.Opts
+      opts = {
+        unwanted_prefix = { "color", "ratatui::style::Styled" },
+        kind = function(k)
+          return { k.Module, k.Function }
+        end,
+        combo = {
+          alphabetic_label_but_underscore_last = function()
+            local comparators = require("cmp_lsp_rs").comparators
+            return { comparators.sort_by_label_but_underscore_last }
+          end,
+          recentlyUsed_sortText = function()
+            local compare = require("cmp").config.compare
+            local comparators = require("cmp_lsp_rs").comparators
+            return {
+              compare.recently_used,
+              compare.sort_text,
+              comparators.sort_by_label_but_underscore_last
+            }
+          end,
+        },
+      },
+    },
     { "mtoohey31/cmp-fish", ft = "fish" },
   },
   config = function()
@@ -33,15 +57,6 @@ return {
 
     local luasnip = require("luasnip")
     local lsp = require("lspconfig")
-
-    -- <LuaSnip>
-    --
-    -- local has_words_before = function()
-    --   local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-    --   return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
-    -- end
-    --
-    -- </LuaSnip>
 
     -- <vsnip>
     local has_words_before = function()
@@ -110,7 +125,11 @@ return {
         -- <vsnip>
         ["<Tab>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
-            cmp.select_next_item()
+            if #cmp.get_entries() == 1 then
+              cmp.confirm({ select = true })
+            else
+              cmp.select_next_item()
+            end
           elseif vim.fn["vsnip#available"](1) == 1 then
             feedkey("<Plug>(vsnip-expand-or-jump)", "")
           elseif has_words_before() then
@@ -128,42 +147,20 @@ return {
           end
         end, { "i", "s" }),
         -- </vsnip>
-        -- <LuaSnip>
-        -- ["<Tab>"] = cmp.mapping(function(fallback)
-        --   if cmp.visible() then
-        --     cmp.select_next_item()
-        --   elseif has_words_before() then
-        --     cmp.complete()
-        --   else
-        --     fallback()
-        --   end
-        -- end, { "i", "s" }),
-        -- ["<S-Tab>"] = cmp.mapping(function(fallback)
-        --   if cmp.visible() then
-        --     cmp.select_prev_item()
-        --   elseif has_words_before() then
-        --     cmp.complete()
-        --   else
-        --     fallback()
-        --   end
-        -- end, { "i", "s" }),
-        -- </LuaSnip>
       }),
       sources = cmp.config.sources({
         { name = "nvim_lsp" },
-        -- { name = "luasnip" },
         { name = 'vsnip' },
-        -- { name = "ultisnips" },
-        -- { name = 'snippy' },
         { name = "buffer" },
         { name = "path" },
-        -- { name = 'nvim_cmp_sign' },
         { name = 'nvim_lsp_signature_help' },
         { name = 'fish' },
         { name = 'emoji' },
         { name = "git" },
         { name = "rg" },
         { name = "go_pkgs" },
+        { name = "rust" },
+
         option = {
           get_bufnrs = function()
             local bufs = {}
@@ -177,17 +174,17 @@ return {
       formatting = {
         expandable_indicator = true,
         fields = { "kind", "abbr", "menu" },
-        format = function(entry, vim_item)
-          vim_item.kind = cmp_kinds[vim_item.kind] or ""
-          local lsp_icon = "󱗖 "
-          vim_item.menu = ({
+        format = function(entry, item)
+          item.kind = cmp_kinds[item.kind] or ""
+          local menu_icons = {
+            lsp_icon = "󱗖 ",
+            path = '🖫',
             buffer = "󰝹 ",
-            nvim_lsp = lsp_icon,
             luasnip = " ",
-            vsnip = "X"
-            -- ultisnips = ""
-          })[entry.source.name]
-          return vim_item
+            vsnip = ""
+          }
+          item.menu = menu_icons[entry.source.name]
+          return item
         end,
       },
     })
@@ -199,7 +196,6 @@ return {
         ["<S-Tab>"] = cmp.mapping(cmp.mapping.select_prev_item(), { "i", "c" }),
         ["<Tab>"] = cmp.mapping(cmp.mapping.select_next_item(), { "i", "c" }),
       },
-      -- mapping = cmp.mapping.preset.cmdline(),
       sources = {
         { name = "buffer" },
         { name = 'nvim_lsp_document_symbol' },
@@ -213,12 +209,32 @@ return {
         ["<S-Tab>"] = cmp.mapping(cmp.mapping.select_prev_item(), { "i", "c" }),
         ["<Tab>"] = cmp.mapping(cmp.mapping.select_next_item(), { "i", "c" }),
       },
-      mapping = cmp.mapping.preset.cmdline(),
       sources = cmp.config.sources({
         { name = "path" },
       }, {
         { name = "cmdline" },
       }),
     })
+  end,
+
+  --@param opts cmp.ConfigSchema
+  opts = function(_, opts)
+    local cmp_lsp_rs = require("cmp_lsp_rs")
+    local comparators = cmp_lsp_rs.comparators
+    local compare = require("cmp").config.compare
+
+    -- opts.sorting.comparators = {
+    --   compare.exact,
+    --   compare.score,
+    --   -- comparators.inherent_import_inscope,
+    --   comparators.inscope_inherent_import,
+    --   comparators.sort_by_label_but_underscore_last,
+    -- }
+
+    -- for _, source in ipairs(opts.sources) do
+    --   cmp_lsp_rs.filter_out.entry_filter(source)
+    -- end
+
+    return opts
   end,
 }

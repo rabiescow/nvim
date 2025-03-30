@@ -31,8 +31,6 @@ return {
 
     local on_attach = function(client, bufnr)
       -- enable completion triggered by <C-x><C-o>
-      vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
-
       local bufopts = { noremap = true, silent = true, buffer = bufnr }
       keymap.set("n", "gD", vim.lsp.buf.declaration, bufopts)
       keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
@@ -79,6 +77,7 @@ return {
     }
 
     lsp.ocamllsp.setup({
+      cmd_env = { DUNE_BUILD_DIR = '_build_lsp' },
       cmd = { "ocamllsp" },
       filetypes = {
         "ocaml",
@@ -107,13 +106,19 @@ return {
       capabilities = capabilities,
       settings = {
         gopls = {
+          experimentalPostFixCompletions = true,
           completeUnimported = true,
           usePlaceholders = true,
           analyses = {
             unusedparams = true,
+            shadow = true,
           },
+          staticcheck = true,
         },
       },
+      init_options = {
+        usePlaceholders = true,
+      }
     })
 
     lsp.zls.setup({
@@ -190,133 +195,11 @@ return {
       capabilities = capabilities,
     })
 
-    lsp.rust_analyzer.setup({
-      cmd = { "rust-analyzer" },
-      settings = {
-        ["rust-analyzer"] = {
-          imports = {
-            granularity = {
-              group = "module",
-            },
-            prefix = "self",
-          },
-          assist = {
-            importMergeBehavior = "last",
-            importPrefix = "by_self",
-          },
-          cargo = {
-            loadOutDirsFromCheck = true,
-            buildScripts = {
-              enable = true,
-            },
-            extraArgs = {},
-            extraEnv = {},
-            target = null,
-            unsetTest = { "core" },
-          },
-          checkOnSave = true,
-          check = {
-            allTargets = true,
-            extraArgs = {},
-            extraEnv = {},
-            features = null,
-            ignores = {},
-            invocationLocation = "workspace",
-            noDefaultFeatures = null,
-            overrideCommand = null,
-            targets = null,
-            workspace = true,
-          },
-          completion = {
-            autoImport = {
-              enable = true,
-            },
-            autoself = {
-              enable = true,
-            },
-            callable = {
-              snippets = "fill_arguments",
-            },
-            limit = null,
-            postfix = {
-              enable = true,
-            },
-          },
-          diagnostics = {
-            disables = {},
-            enabled = true,
-            experimental = {
-              enable = true,
-            },
-            remapPrefix = {},
-            warningsAsHint = {},
-            warningsAsInfo = {},
-          },
-          files = {
-            excludeDirs = {},
-            watcher = {},
-          },
-          highlightRelated = {
-            breakPoints = {
-              enable = true,
-            },
-            closureCapture = {
-              enable = true,
-            },
-            exitPoints = {
-              enable = true,
-            },
-            references = {
-              enable = true,
-            },
-            yieldPoints = {
-              enable = true,
-            },
-          },
-          hover = {
-            action = {
-              enable = true,
-              debug = {
-                enable = true,
-              },
-              gotoTypeDef = {
-                enable = true,
-              },
-              implementations = {
-                enable = true,
-              },
-              references = {
-                enable = true,
-              },
-              run = {
-                enable = true,
-              },
-            },
-            documentation = {
-              enable = true,
-              keywords = {
-                enable = true,
-              },
-            },
-            links = {
-              enable = true,
-            },
-            memoryLayout = {
-              alignment = "hexadecimal",
-              enable = true,
-              niches = false,
-              offset = "hexadecimal",
-              size = "both",
-            },
-          },
-          procMacro = {
-            enable = true,
-          },
-        },
-      },
-      on_attach = on_attach,
-      capabilities = capabilities,
-    })
+    -- lsp.rust_analyzer.setup({
+    --   cmd = { "rust-analyzer" },
+    --   on_attach = on_attach,
+    --   capabilities = capabilities,
+    -- })
 
     lsp.serve_d.setup({
       on_attach = on_attach,

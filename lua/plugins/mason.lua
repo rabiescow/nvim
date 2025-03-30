@@ -3,9 +3,6 @@ return {
   dependencies = {
     "williamboman/mason-lspconfig.nvim",
   },
-  init = function()
-    vim.api.nvim_set_var("enfocado_plugins", { "mason" })
-  end,
   config = function()
     local mason = require("mason")
     local mason_lspconfig = require("mason-lspconfig")
@@ -13,9 +10,9 @@ return {
     mason.setup({
       ui = {
         icons = {
-          package_installed = "✓",
-          package_pending = "➜ ",
-          package_uninstalled = "✗",
+          package_installed = "",
+          package_pending = "",
+          package_uninstalled = "",
         },
       },
     })
