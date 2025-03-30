@@ -4,6 +4,7 @@ return {
     "williamboman/mason.nvim",
     "williamboman/mason-lspconfig.nvim",
     "hrsh7th/cmp-nvim-lsp",
+    "hrsh7th/nvim-cmp",
 
     -- Useful status updates for LSP.
     -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
@@ -13,17 +14,21 @@ return {
     local lsp = require("lspconfig")
     local keymap = vim.keymap
 
-    local capabilities = vim.lsp.protocol.make_client_capabilities()
-    capabilities = vim.tbl_deep_extend('force', capabilities,
-      require('blink.cmp').get_lsp_capabilities({}, false))
-    -- capabilities = vim.tbl_deep_extend('force', {
+    local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+    -- local capabilities = vim.tbl_deep_extend('force', {
     --   textDocument = {
     --     foldingRange = {
     --       dynamicRegistration = false,
     --       lineFoldingOnly = true
     --     }
     --   }
-    -- })
+    -- }, {})
+
+    -- local capabilities = vim.lsp.protocol.make_client_capabilities()
+    -- capabilities = vim.tbl_deep_extend('force', capabilities,
+    --   require('blink.cmp').get_lsp_capabilities({}, false))
+
     local on_attach = function(client, bufnr)
       -- enable completion triggered by <C-x><C-o>
       vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
@@ -80,7 +85,6 @@ return {
         "ocaml.menhir",
         "ocaml.interface",
         "ocaml.ocamllex",
-        -- "reason",
         "dune"
       },
       root_dir = lsp.util.root_pattern(
@@ -310,6 +314,11 @@ return {
           },
         },
       },
+      on_attach = on_attach,
+      capabilities = capabilities,
+    })
+
+    lsp.serve_d.setup({
       on_attach = on_attach,
       capabilities = capabilities,
     })

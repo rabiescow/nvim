@@ -11,7 +11,7 @@ return {
         hsl_fn = true,
         css = true,
         css_fn = true,
-        mode = 'foreground',
+        mode = 'background',
       }
     })
   end,

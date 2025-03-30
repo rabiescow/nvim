@@ -63,6 +63,7 @@ return {
           "xml",
           "yaml",
           "zig",
+          "d",
         },
         incremental_selection = {
           enable = true,
