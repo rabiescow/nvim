@@ -88,6 +88,13 @@ return {
         is_always_hidden = function(name, bufnr)
           return false
         end,
+
+
+        -- Sort file names with numbers in a more intuitive order for humans.
+        -- Can be "fast", true, or false. "fast" will turn it off for large directories.
+        natural_order = "fast",
+        -- Sort file and directory names case insensitive
+        case_insensitive = false,
         sort = {
           -- sort order can be "asc" or "desc"
           -- see :help oil-columns to see which columns are sortable
