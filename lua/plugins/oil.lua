@@ -1,6 +1,6 @@
 return {
   "stevearc/oil.nvim",
-  dependencies = { "nvim-tree/nvim-web-devicons" },
+  dependencies = { { "echasnovski/mini.icons", opts = {} } },
   config = function()
     require("oil").setup({
       -- Oil will take over directory buffers (e.g. `vim .` or `:e src/`)
@@ -14,6 +14,7 @@ return {
         "permissions",
         "size",
         "mtime",
+        -- "birthtime",
       },
       -- Buffer-local options to use for oil buffers
       buf_options = {
@@ -24,7 +25,7 @@ return {
       win_options = {
         wrap = false,
         signcolumn = "no",
-        cursorcolumn = true,
+        cursorcolumn = false,
         foldcolumn = "0",
         spell = false,
         list = false,
@@ -42,6 +43,11 @@ return {
       -- You can set the delay to false to disable cleanup entirely
       -- Note that the cleanup process only starts when none of the oil buffers are currently displayed
       cleanup_delay_ms = 2000,
+      -- Set to true to autosave buffers that are updated with LSP willRenameFiles
+      -- Set to "unmodified" to only save unmodified buffers
+      lsp_file_methods = {
+        autosave_changes = false,
+      },
       -- Constrain the cursor to the editable parts of the oil buffer
       -- Set to `false` to disable, or "name" to keep it on the file names
       constrain_cursor = "editable",
@@ -58,7 +64,7 @@ return {
         ["<C-h>"] = "actions.select_split",
         ["<C-t>"] = "actions.select_tab",
         ["<C-p>"] = "actions.preview",
-        ["<Esc>"] = "actions.close",
+        ["<C-c>"] = "actions.close",
         ["<C-l>"] = "actions.refresh",
         ["`"] = "actions.parent",
         ["_"] = "actions.open_cwd",
@@ -75,11 +81,11 @@ return {
         -- Show files and directories that start with "."
         show_hidden = true,
         -- This function defines what is considered a "hidden" file
-        is_hidden_file = function(name, _)
+        is_hidden_file = function(name, bufnr)
           return vim.startswith(name, ".")
         end,
         -- This function defines what will never be shown, even when `show_hidden` is set
-        is_always_hidden = function(_, _)
+        is_always_hidden = function(name, bufnr)
           return false
         end,
         sort = {
@@ -92,8 +98,8 @@ return {
       -- Configuration for the floating window in oil.open_float
       float = {
         -- Padding around the floating window
-        padding = 2,
-        max_width = { 100, 0.9 },
+        padding = 5,
+        max_width = 80,
         max_height = 20,
         border = "rounded",
         win_options = {
@@ -144,14 +150,6 @@ return {
           winblend = 0,
         },
       },
-      -- Configuration for the floating SSH window
-      ssh = {
-        border = "rounded",
-      },
-      -- Configuration for the floating keymaps help window
-      keymaps_help = {
-        border = "rounded",
-      },
     })
-  end
+  end,
 }
