@@ -16,9 +16,11 @@ require("lazy").setup({
   spec = {
     { import = "plugins" },
     { import = "plugins.themes" },
+    { import = "plugins.lsp" },
   },
 })
 
 vim.opt.termguicolors = true
 vim.cmd.colorscheme("kat.nvim")
--- vim.api.nvim_command("colorscheme enfocado")
+vim.api.nvim_set_hl(0, "Normal", { bg = "#080808" })
+-- vim.api.nvim_set_hl(0, "Visual", { bg = "#080808" })

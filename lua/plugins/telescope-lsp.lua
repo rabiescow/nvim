@@ -1,3 +1,4 @@
+-- return {}
 return {
   "Slotos/telescope-lsp-handlers.nvim",
   dependencies = {},

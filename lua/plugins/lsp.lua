@@ -1,3 +1,4 @@
+-- return {}
 return {
   "neovim/nvim-lspconfig",
   dependencies = {
@@ -13,24 +14,8 @@ return {
   config = function()
     local lsp = require("lspconfig")
     local keymap = vim.keymap
-
     local capabilities = require('cmp_nvim_lsp').default_capabilities()
-
-    -- local capabilities = vim.tbl_deep_extend('force', {
-    --   textDocument = {
-    --     foldingRange = {
-    --       dynamicRegistration = false,
-    --       lineFoldingOnly = true
-    --     }
-    --   }
-    -- }, {})
-
-    -- local capabilities = vim.lsp.protocol.make_client_capabilities()
-    -- capabilities = vim.tbl_deep_extend('force', capabilities,
-    --   require('blink.cmp').get_lsp_capabilities({}, false))
-
     local on_attach = function(client, bufnr)
-      -- enable completion triggered by <C-x><C-o>
       local bufopts = { noremap = true, silent = true, buffer = bufnr }
       keymap.set("n", "gD", vim.lsp.buf.declaration, bufopts)
       keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
@@ -76,6 +61,26 @@ return {
       },
     }
 
+    -- Diagnostic symbols in the sign column (gutter)
+    vim.diagnostic.config({
+      virtual_text = false,
+      -- virtual_text = { prefix = "󱒄" },
+      signs = { text = { [vim.diagnostic.severity.ERROR] = " ", [vim.diagnostic.severity.WARN] = " ", [vim.diagnostic.severity.INFO] = " ", [vim.diagnostic.severity.HINT] = " " } },
+      update_in_insert = true,
+      underline = false,
+      severity_sort = true,
+      float = {
+        border = "single",
+        source = "always",
+        header = "Diagnostics",
+        prefix = "",
+      },
+      virtual_lines = {
+        only_current_line = true,
+        spacing = 1,
+      },
+    })
+
     lsp.ocamllsp.setup({
       cmd_env = { DUNE_BUILD_DIR = '_build_lsp' },
       cmd = { "ocamllsp" },
@@ -106,7 +111,7 @@ return {
       capabilities = capabilities,
       settings = {
         gopls = {
-          experimentalPostFixCompletions = true,
+          -- experimentalPostFixCompletions = true,
           completeUnimported = true,
           usePlaceholders = true,
           analyses = {
@@ -122,7 +127,7 @@ return {
     })
 
     lsp.zls.setup({
-      cmd = { "zls", "--enable-debug-log" },
+      cmd = { "zls" },
       on_attach = on_attach,
       capabilities = capabilities,
     })
@@ -264,41 +269,39 @@ return {
       capabilities = capabilities,
     })
 
-    -- Diagnostic symbols in the sign column (gutter)
-    local signs = {
-      Error = " ",
-      Warn = " ",
-      Info = " ",
-      Hint = " ",
-    }
-    for type, icon in pairs(signs) do
-      local hl = "DiagnosticSign" .. type
-      vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
+    vim.o.updatetime = 250
+
+    function PrintDiagnostics(opts, bufnr, line_nr, client_id)
+      bufnr = bufnr or 0
+      line_nr = line_nr or (vim.api.nvim_win_get_cursor(0)[1] - 1)
+      opts = opts or { ['lnum'] = line_nr }
+
+      local line_diagnostics = vim.diagnostic.get(bufnr, opts)
+      if vim.tbl_isempty(line_diagnostics) then return end
+
+      local diagnostic_message = ""
+      for i, diagnostic in ipairs(line_diagnostics) do
+        diagnostic_message = diagnostic_message ..
+            string.format("󱒄 %s | %s", diagnostic.severity, diagnostic.message or "")
+        print(diagnostic_message)
+        if i ~= #line_diagnostics then
+          diagnostic_message = diagnostic_message .. "\n"
+        end
+      end
+      vim.api.nvim_echo({ { diagnostic_message, "Normal" } }, false, {})
     end
 
-    vim.diagnostic.config({
-      virtual_text = false,
-      -- virtual_text = { prefix = "●" }, ** enable this to get inline error messages
-      signs = true,     -- enables a diagnostics symbol in sign column
-      update_in_insert = true,
-      underline = true, -- underlines the offender
-      severity_sort = true,
-      float = {
-        border = "single",
-        source = "always",
-        header = "Diagnostics",
-        prefix = "",
-      },
-    })
+    -- uses the function above to display diagnostics in the cmd bar
+    -- vim.cmd([[ autocmd! CursorHold,CursorHoldI * lua PrintDiagnostics() ]])
 
-    vim.o.updatetime = 250
-    vim.cmd([[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]])
+    -- this function auto generates the behavior of shift-k diagnostics
+    -- can be annoying and overlay the text to make it hard to read
+    -- vim.cmd([[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]])
 
     vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
       underline = false,
       update_in_insert = false,
-      -- virtual_text = { spacing = 4, prefix = "●" },
-      virtual_text = false,
+      virtual_text = { spacing = 4, prefix = "●" },
       severity_sort = true,
     })
 

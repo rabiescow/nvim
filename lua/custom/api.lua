@@ -22,3 +22,12 @@ local toggleHover = function()
   })
 end
 vim.keymap.set("n", "<leader>h", toggleHover)
+
+local format_sync_grp = api.nvim_create_augroup("goimports", {})
+api.nvim_create_autocmd("BufWritePre", {
+  pattern = "*.go",
+  callback = function()
+    require('go.format').goimports()
+  end,
+  group = format_sync_grp,
+})

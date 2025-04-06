@@ -9,6 +9,7 @@ return {
     "hrsh7th/cmp-cmdline",
     "hrsh7th/cmp-nvim-lsp",
     "hrsh7th/cmp-nvim-lsp-signature-help",
+    "hrsh7th/cmp-nvim-lsp-document-symbol",
     "cmp-nvim-lsp-document-symbol",
     "hrsh7th/vim-vsnip",
     "hrsh7th/vim-vsnip-integ",
@@ -37,36 +38,36 @@ return {
       vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
     end
     -- </vsnip>
-
     local cmp_kinds = {
-      Text = "󰵴",
-      Method = " ",
-      Function = "󰡱 ",
-      Constructor = " ",
-      Field = " ",
-      Variable = "󱃻 ",
-      Class = "ﴯ  ",
-      Interface = " ",
-      Module = "",
-      Property = "ﰠ  ",
-      Unit = "",
-      Value = "λ",
-      Enum = "",
-      Keyword = " ",
-      Snippet = " ",
-      Color = "",
-      File = "",
-      Reference = "",
-      Folder = "",
-      EnumMember = "",
-      Constant = " ",
-      Struct = "  ",
-      Event = "",
-      Operator = "",
-      TypeParameter = "",
+      Text = '  ',
+      Method = '  ',
+      Function = '  ',
+      Constructor = '  ',
+      Field = '  ',
+      Variable = '  ',
+      Class = '  ',
+      Interface = '  ',
+      Module = '  ',
+      Property = '  ',
+      Unit = '  ',
+      Value = '  ',
+      Enum = '  ',
+      Keyword = '  ',
+      Snippet = '  ',
+      Color = '  ',
+      File = '  ',
+      Reference = '  ',
+      Folder = '  ',
+      EnumMember = '  ',
+      Constant = '  ',
+      Struct = '  ',
+      Event = '  ',
+      Operator = '  ',
+      TypeParameter = '  ',
     }
 
     cmp.setup({
+      preselect = cmp.PreselectMode.None,
       snippet = {
         expand = function(args)
           vim.fn["vsnip#anonymous"](args.body)
@@ -76,9 +77,12 @@ return {
       window = {
         completion = {
           winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,Search:None",
+          zindex = 1000,
+          col_offset = 2000,
         },
         documentation = {
           border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
+          zindex = 9999,
         },
       },
       mapping = cmp.mapping.preset.insert({
@@ -123,8 +127,8 @@ return {
         { name = "path" },
         { name = 'nvim_lsp_signature_help' },
         { name = 'fish' },
-        { name = "git" },
-        { name = "rg" },
+        -- { name = "git" },
+        -- { name = "rg" },
         { name = "go_pkgs" },
 
         option = {
@@ -141,17 +145,12 @@ return {
         expandable_indicator = true,
         fields = { "kind", "abbr", "menu" },
         format = function(entry, item)
-          item.kind = cmp_kinds[item.kind] or ""
-          local icons = {
-            nvim_lsp = "󱗖 ",
-            path = "🖫",
-            buffer = "󰝹",
-            luasnip = " ",
-            vsnip = "",
-          }
-          item.menu = icons[entry.source.name]
-          return item
-        end,
+          local row = require("lspkind").cmp_format({ mode = "symbol_text", max_width = 100 })(entry, item)
+          local strings = vim.split(row.kind, "%s", { trimempty = true })
+          row.kind = cmp_kinds[strings[2]]
+          row.menu = "    (" .. (strings[2] or "") .. ")"
+          return row
+        end
       },
     })
 

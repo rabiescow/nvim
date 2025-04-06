@@ -26,15 +26,12 @@ keymap.set("n", "-", "<CMD>Oil --float<CR>", { desc = "browse filesystem" })
 
 -- set keymaps
 -- Telescope keymaps
-keymap.set("n", "ff", "<CMD>Telescope find_files<CR>", { desc = "Fuzzy find files in cwd" })
-keymap.set("n", "fr", "<CMD>Telescope oldfiles<CR>", { desc = "Fuzzy find recent files" })
-keymap.set("n", "fs", "<CMD>Telescope live_grep<CR>", { desc = "Find string in cwd" })
-keymap.set("n", "fc", "<CMD>Telescope grep_string<CR>", { desc = "Find string under cursor in cwd" })
+keymap.set("n", "Tf", "<CMD>Telescope find_files<CR>", { desc = "Fuzzy find files in cwd" })
+keymap.set("n", "Tr", "<CMD>Telescope oldfiles<CR>", { desc = "Fuzzy find recent files" })
+keymap.set("n", "Tg", "<CMD>Telescope live_grep<CR>", { desc = "Find string in cwd" })
+keymap.set("n", "Tc", "<CMD>Telescope grep_string<CR>", { desc = "Find string under cursor in cwd" })
 
--- Trouble
-keymap.set("n", "<leader>tr", "<CMD>Trouble<CR>", { desc = "Open Trouble for diagnostics" })
-keymap.set("n", "<Esc>", "<CMD>TroubleClose<CR>", { desc = "Close current Trouble dialog" })
-
+-- Autopairs
 keymap.set("n", "<leader><", "<CMD>require(‘nvim-autopairs’).disable()<CR>", { desc = "Disable Autopairs" })
 keymap.set("n", "<leader><", "<CMD>require(‘nvim-autopairs’).enable()<CR>", { desc = "Enable Autopairs" })
 
@@ -44,31 +41,20 @@ keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next [D]iagnosti
 keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic [E]rror messages" })
 keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
 
+-- Colortils
+keymap.set("n", "<A-c>", "<CMD>Colortils<CR>", { desc = "" })
+
+-- Colorizer
+keymap.set("n", "<A-v>", "<CMD>ColorizerToggle<CR>", { desc = "" })
+
 keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
--- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
--- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
--- is not what someone will guess without a bit more experience.
---
--- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
--- or just use <C-\><C-n> to exit terminal mode
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 
 -- Keybinds to make split navigation easier.
---  Use CTRL+<hjkl> to switch between windows
+--  Use ALT+<hjkl> to switch between windows
 --
 --  See `:help wincmd` for a list of all window commands
-vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
-vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
-vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
-vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
-
--- -- Ufo folds
--- vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
--- vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
--- vim.keymap.set('n', 'zr', require('ufo').openFoldsExceptKinds)
--- vim.keymap.set('n', 'zm', require('ufo').closeFoldsWith) -- closeAllFolds == closeFoldsWith(0)
-
--- BLOCK TOGGLE
--- vim.api.nvim_create_user_command('Block', "<CMD>require('block').toggle<CR>", { desc = "TOGGLE" })
--- vim.api.nvim_create_user_command('BlockOn', "<CMD>require('block').on<CR>", { desc = "ON" })
--- vim.api.nvim_create_user_command('BlockOff', "<CMD>require('block').off<CR>", { desc = "OFF" })
+vim.keymap.set("n", "<A-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
+vim.keymap.set("n", "<A-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
+vim.keymap.set("n", "<A-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
+vim.keymap.set("n", "<A-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
