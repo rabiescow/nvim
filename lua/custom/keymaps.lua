@@ -1,5 +1,5 @@
 -- set leader key to comma
-vim.g.mapleader = ","
+vim.g.mapleader = " "
 
 local keymap = vim.keymap -- for conciseness
 
@@ -22,7 +22,7 @@ keymap.set("n", "<leader>q", "<CMD>q<CR>", { silent = false })
 keymap.set("n", "<leader>z", "<CMD>wq<CR>", { silent = false })
 
 -- Oil floating window keymap
-keymap.set("n", "-", "<CMD>Oil --float<CR>", { desc = "browse filesystem" })
+keymap.set("n", "-", "<CMD>Oil --float<CR>", { desc = "Browse current working directory" })
 
 -- set keymaps
 -- Telescope keymaps

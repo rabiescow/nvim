@@ -1,5 +1,5 @@
 return {
-  "epwalsh/obsidian.nvim",
+  "obsidian-nvim/obsidian.nvim",
   version = "*",
   lazy = true,
   ft = "markdown",
@@ -10,7 +10,23 @@ return {
         {
           name = "personal",
           path = "~/Documents",
-        }
+        },
+        {
+          name = "no-vault",
+          path = function()
+            -- alternatively use the CWD:
+            -- return assert(vim.fn.getcwd())
+            return assert(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
+          end,
+          overrides = {
+            notes_subdir = vim.NIL, -- have to use 'vim.NIL' instead of 'nil'
+            new_notes_location = "current_dir",
+            templates = {
+              folder = vim.NIL,
+            },
+            disable_frontmatter = true,
+          },
+        },
       },
       -- Alternatively - and for backwards compatibility - you can set 'dir' to a single path instead of
       -- 'workspaces'. For example:
@@ -242,7 +258,8 @@ return {
         },
         -- Use bullet marks for non-checkbox lists.
         bullets = { char = "•", hl_group = "ObsidianBullet" },
-        external_link_icon = { char = "", hl_group = "ObsidianExtLinkIcon" },
+        external_link_icon = { char = "", hl_group = "ObsidianExtLinkIcon" },
+        -- external_link_icon = { char = "", hl_group = "ObsidianExtLinkIcon" },
         -- Replace the above with this if you don't have a patched font:
         -- external_link_icon = { char = "", hl_group = "ObsidianExtLinkIcon" },
         reference_text = { hl_group = "ObsidianRefText" },

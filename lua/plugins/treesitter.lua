@@ -22,8 +22,6 @@ return {
         },
         -- enable indentation
         indent = { enable = true },
-        -- enable autotagging /w nvim-ts-autotag plugin
-        -- autotag = { enable = true },
         -- ensure following languages are covered
         ensure_installed = {
           "json",
@@ -31,6 +29,7 @@ return {
           "html",
           "css",
           "markdown",
+          "markdown_inline",
           "comment",
           "fish",
           "bash",

@@ -8,25 +8,40 @@ return {
       return vim.fn.winwidth(0) > 80
     end
 
+    local datetime = {
+      'datetime',
+      style = "%F %T"
+    }
+
     local diff = {
       "diff",
-      colored = false,
+      colored = true,
+      diff_color = {
+        added    = 'LuaLineDiffAdd',
+        modified = 'LuaLineDiffChange',
+        removed  = 'LuaLineDiffDelete',
+      },
       symbols = { added = " ", modified = " ", removed = " " }, -- changes diff symbols
       cond = hide_in_width,
     }
 
+    local modes = {
+      ["INSERT"]    = "󰬐 󰬕 󰬚 ",
+      ["VISUAL"]    = "󰬝 󰬐 󰬚 ",
+      ["NORMAL"]    = "󰬕 󰬖 󰬙 ",
+      ["V-REPLACE"] = "󰬝  󰬙 󰬌 󰬗 "
+    }
+
     local mode = {
       "mode",
+      colored = true,
       fmt = function(str)
-        -- if str == 'INSERT'
-        -- then
-        -- return '   ' .. str .. ' '
-        -- elseif str == 'VISUAL'
-        -- then
-        return '   ' .. str .. '   '
-        -- else
-        -- return "    " .. str .. "   "
-        -- end
+        if modes[str]
+        then
+          return modes[str]
+        else
+          return str
+        end
       end,
     }
 
@@ -35,17 +50,24 @@ return {
       icons_enabled = true,
     }
 
-
     local filename = {
       "filename",
       file_status = true,
-      path = 0,
+      newfile_status = false,
+      path = false,
+      shorting_target = 40,
+      symbols = {
+        modified = '[+]',
+        readonly = '[-]',
+        unnamed = '[No Name]',
+        newfile = '[New]',
+      },
     }
 
     local branch = {
       "branch",
       icons_enabled = true,
-      icon = "",
+      icon = { "", color = { fg = "white" }, bold = true },
     }
 
     local location = {
@@ -56,28 +78,35 @@ return {
     local diagnostic = {
       "diagnostics",
       sources = { "nvim_diagnostic" },
+      sections = { 'error', 'warn', 'info', 'hint' },
       symbols = {
         error = " ",
         warn = " ",
         info = " ",
         hint = " ",
       },
+      colored = true,
+      update_in_insert = true,
       always_visible = false,
     }
 
-    local progress = {
-      "progress",
-      fmt = function(str)
-        return str .. " / " .. vim.api.nvim_buf_line_count(0)
-      end,
+    local lsp = {
+      'lsp_status',
+      icon = '',
+      symbols = {
+        spinner = { '⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏' },
+        done = '✓',
+        separator = ' ',
+      },
+      ignore_lsp = {},
     }
 
     lualine.setup({
       options = {
         icons_enabled = true,
         theme = "auto",
-        transparent = true,
-        component_separators = { left = "┃", right = "ミ" },
+        transparent = false,
+        component_separators = { left = '', right = ':' },
         section_separators = { left = "", right = "" },
         disabled_filetypes = {
           statusline = {},
@@ -92,24 +121,23 @@ return {
           winbar = 1000,
         },
       },
+
       sections = {
-        lualine_a = { branch, diff },
-        lualine_b = { mode },
-        lualine_c = {},
-        lualine_x = { diagnostic, "encoding", filetype, battery },
-        lualine_y = { progress },
-        lualine_z = { location },
+        lualine_a = { mode },
+        lualine_b = { diagnostic, lsp },
+        lualine_c = { "encoding", filetype },
+        lualine_x = { branch },
+        lualine_y = {},
+        lualine_z = { filename, diff, location, datetime },
       },
+
       inactive_sections = {
         lualine_a = {},
         lualine_b = {},
-        lualine_c = { filename },
-        lualine_x = { location, battery },
+        lualine_c = {},
         lualine_y = {},
         lualine_z = {},
       },
-      tabline = {},
-      winbar = {},
       inactive_winbar = {},
       extensions = {},
     })

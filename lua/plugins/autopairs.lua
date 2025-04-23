@@ -1,19 +1,22 @@
 return {
   "windwp/nvim-autopairs",
+
   event = { "InsertEnter" },
   dependencies = {
     "hrsh7th/nvim-cmp",
   },
   config = function()
+    local autopairs = require("nvim-autopairs")
+    local cond = require("nvim-autopairs.conds")
     -- nvim autopairs config
-    require("nvim-autopairs").setup({
+    autopairs.setup({
       check_ts = true, -- enable treesitter
       ts_config = {
         lua = { "string" },
         ocaml = { "string" },
       },
       fast_wrap = {
-        map = "C-M-e",
+        map = "A-e",
         chars = { "{", "[", "(", '"', "'", "<", "(*" },
         pattern = [=[[%'%"%>%]%)%}%,]]=],
         end_key = "$",
@@ -49,6 +52,7 @@ return {
     local cmp = require("cmp")
 
     -- make autopairs and completion work together
-    cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
+    -- cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
+    autopairs.get_rules("'")[1]:with_pair(cond.not_filetypes({ "scheme", "lisp", "ocaml", "ml" }))
   end,
 }

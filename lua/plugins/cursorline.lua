@@ -9,11 +9,11 @@ return {
       },
       cursorword = {
         enable = true,
-        min_length = 6,
+        min_length = 5,
         hl = {
           underline = false,
-          bold = false,
-          italic = true,
+          bold = true,
+          italic = false,
           bg = "#393552",
           fg = "#4DB853",
           sp = "#393552",

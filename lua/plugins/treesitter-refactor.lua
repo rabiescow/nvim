@@ -10,7 +10,7 @@ return {
           clear_on_cursor_move = false,
         },
         highlight_current_scope = {
-          enable = true,
+          enable = false,
         },
         navigation = {
           enable = true,

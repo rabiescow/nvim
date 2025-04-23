@@ -1,9 +1,9 @@
 return {
   "kylechui/nvim-surround",
-  event = { "BufReadPre", "BufNewFile" },
-  version = "*", -- Use for stability; omit to use `main` branch for the latest features
-  -- init = function()
-  --   vim.api.nvim_set_var("enfocado_plugins", { "surround" })
-  -- end,
-  config = true,
+  version = "^3.0.0", -- Use for stability; omit to use `main` branch for the latest features
+  event = "VeryLazy",
+  config = function()
+    local M = require("nvim-surround").setup()
+    return M
+  end
 }

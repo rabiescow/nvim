@@ -18,9 +18,41 @@ require("lazy").setup({
     { import = "plugins.themes" },
     { import = "plugins.lsp" },
   },
+
+  git = {
+    -- defaults for the `Lazy log` command
+    log = { "-8" }, -- show the last 8 commits
+    timeout = 120,  -- kill processes that take more than 2 minutes
+    url_format = "https://github.com/%s.git",
+    -- lazy.nvim requires git >=2.19.0. For older version, set to false (not
+    -- recommended)
+    filter = true,
+    -- rate of network related git operations (clone, fetch, checkout)
+    throttle = {
+      enabled = false,
+      rate = 2,            -- max 2 ops every 5 seconds
+      duration = 5 * 1000, -- in ms
+    },
+    -- Time in seconds to wait before running fetch again for a plugin.
+    -- Repeated update/check operations will not run again until this
+    -- cooldown period has passed.
+    cooldown = 0,
+  },
+  change_detection = {
+    -- automatically check for config file changes and reload the ui
+    enabled = false, -- default: true
+    notify = true,   -- get a notification when changes are found
+  },
 })
 
+vim.api.nvim_set_option("clipboard", "unnamed")
 vim.opt.termguicolors = true
-vim.cmd.colorscheme("kat.nvim")
-vim.api.nvim_set_hl(0, "Normal", { bg = "#080808" })
--- vim.api.nvim_set_hl(0, "Visual", { bg = "#080808" })
+vim.cmd.colorscheme("oscura")
+-- highlight last yank
+vim.api.nvim_create_autocmd("TextYankPost", {
+  desc = "highlight when yanking text",
+  group = vim.api.nvim_create_augroup("kickstart", { clear = true }),
+  callback = function()
+    vim.highlight.on_yank()
+  end,
+})

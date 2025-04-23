@@ -1,7 +1,7 @@
 return {
   "rabiescow/vim-enfocado",
   priority = 1000,
-  lazy = false,
+  lazy = true,
   init = function()
     -- vim.api.nvim_set_var("enfocado_style", "neon")
     vim.api.nvim_set_var("enfocado_style", "nature")

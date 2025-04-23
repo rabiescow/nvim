@@ -7,7 +7,7 @@ return {
       -- Customize or remove this keymap to your liking
       "<leader>f",
       function()
-        require("conform").format({ async = true })
+        require("conform").format({ async = true, lsp_fallback = true })
       end,
       mode = "",
       desc = "Format buffer",
@@ -17,41 +17,56 @@ return {
   ---@module "conform"
   ---@type conform.setupOpts
   opts = {
-    -- config = function()
-    -- require("conform").setup({
+    ft_parsers = {
+      jsonc = "json",
+    },
     formatters_by_ft = {
-      ocaml = { "ocamlformat" },
+      dart = { "dart_format" },
+      dune = { "format-dune-file" },
+      elm = { "elm_format" },
+      fish = { "fish_indent" },
+      go = { "goimports", "gofmt", "golines" },
+      haskell = { "hindent" },
+      html = { "html_beautify" },
+      java = { "google-java-format" },
+      json = { "fixjson", "jq" },
+      lua = { "lua-format", "stylua" },
+      markdown = { "markdownfmt", "markdownlint" },
+      ocaml = { "ocp-indent", "ocamlformat" },
+      python = { "isort", "black" },
       rust = { "rustfmt", lsp_format = "fallback" },
       sql = { "sql_formatter" },
+      xml = { "xmlformatter", "xmllint" },
+      yaml = { "yamlfix", "yamlfmt" },
       zig = { "zigfmt" },
-      xml = { "xmlformat" },
-      json = { "jq" },
-      yaml = { "yamlfmt" },
-      lua = { "stylua" },
-      python = { "isort", "black" },
-      go = { "goimports", "gofmt" },
-      elm = { "elm_format" },
-      dart = { "dart_format" },
-    },
-    format_on_save = {
-      lsp_fallback = true,
-      async = false,
-      timeout_ms = 500,
     },
     default_format_opts = {
       lsp_format = "fallback",
+      stop_after_first = true,
     },
-  }
-  -- )
-
-  -- vim.keymap.set({ "n", "v" }, "<leader>f", function()
-  --   conform.format({
-  --     lsp_fallback = true,
-  --     async = true,
-  --     timeout_ms = 500,
-  --   })
-  -- end, {
-  --   desc = "Format file or range (in visual mode)",
-  -- })
-  -- end,
+    format_on_save = {
+      lsp_format = "fallback",
+      timeout_ms = 500,
+    },
+    format_after_save = {
+      lsp_format = "fallback",
+    },
+    notify_on_error = true,
+    notify_no_formatters = true,
+    formatters = {
+      ocamlformat = {
+        prepend_args = {
+          "--if-then-else",
+          "--vertical",
+          "--break-cases",
+          "fit-or-vertical",
+          "--type-decl",
+          "--sparse",
+        },
+      },
+    },
+  },
+  init = function()
+    vim.o.formatexpr = "v:lua.require.'conform'.formatexpr()"
+  end
 }
