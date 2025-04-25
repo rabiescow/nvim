@@ -1,0 +1,52 @@
+{
+  "Bind to self inversify container": {
+    "prefix": "bs",
+    "body": ["container.bind($1).toSelf()"],
+    "description": "bind to self inversify container"
+  },
+  "Private readonly prop": {
+    "prefix": "pr",
+    "body": ["private readonly $1"],
+    "description": "private readonly"
+  },
+  "Export type": {
+    "prefix": "et",
+    "body": ["export type $1"],
+    "description": "export type"
+  },
+  "Export interface": {
+    "prefix": "ei",
+    "body": ["export interface $1"],
+    "description": "export interface"
+  },
+  "Default import": {
+    "prefix": "di",
+    "body": ["import * as $1 from '$2';"],
+    "description": "Default import"
+  },
+  "Json stringify": {
+    "prefix": "jsons",
+    "body": ["JSON.stringify($1, null, 2)"],
+    "description": "Json stringify"
+  },
+  "Log": {
+    "prefix": "l",
+    "body": ["console.log($1)", "$2"],
+    "description": "Console log"
+  },
+  "Promise<void>": {
+    "prefix": "pv",
+    "body": [":Promise<void>"],
+    "description": "Promise<void>"
+  },
+  "Err": {
+    "prefix": "e",
+    "body": ["if($1){", "$2", "}", "$3"],
+    "description": "Promise<void>"
+  },
+  "Return": {
+    "prefix": "r",
+    "body": ["return "],
+    "description": "return"
+  }
+}

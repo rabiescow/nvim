@@ -1,6 +1,9 @@
 return {
-  'neovim/nvim-lspconfig',
-  dependencies = { 'saghen/blink.cmp', "b0o/SchemaStore.nvim" },
+  "neovim/nvim-lspconfig",
+  dependencies = {
+    "saghen/blink.cmp",
+    "b0o/SchemaStore.nvim",
+  },
   -- example using `opts` for defining servers
   opts = {
     servers = {
@@ -15,31 +18,29 @@ return {
 
         settings = {
           Lua = {
-            completion = { callSnippet = 'Replace' },
-            -- Using stylua for formatting.
-            format = { enable = false },
+            completion = {
+              callSnippet = "Replace",
+              displayContext = 2,
+              keywordSnippet = "Both",
+            },
+            format = { enable = true },
             hint = {
               enable = true,
-              arrayIndex = 'Disable',
-            },
-            runtime = {
-              version = 'LuaJIT',
+              arrayIndex = "Enable",
+              setType = true,
             },
             diagnostics = {
               enable = true,
               globals = { "vim" },
-              severity = {
-                'Error',
-                'Warning',
-                'Information',
-                'Hint',
-              },
+            },
+            runtime = {
+              version = "LuaJIT"
             },
             workspace = {
-              checkThirdParty = false,
+              checkThirdParty = "ApplyInMemory",
               library = {
                 vim.env.VIMRUNTIME,
-                '${3rd}/luv/library',
+                "${3rd}/luv/library",
               },
             },
           },
@@ -51,21 +52,44 @@ return {
           "reason", "dune" },
         root_dir = require("lspconfig").util.root_pattern("*.opam", "esy.json",
           "package.json", ".git", "dune-project", "dune-workspace"),
+        settings = {
+          ocamllsp = {
+            extendedHover = true,
+            codelens = true,
+            duneDiagnostics = true,
+            inlayHints = true,
+            syntaxDocumentation = true,
+            merlinJumpCodeActions = true,
+          },
+        },
       },
       gopls = {
         cmd = { "gopls" },
         filetypes = { "go", "gomod", "gowork", "gotmpl" },
-           single_file_support = true,
+        single_file_support = true,
+        settings = {
+          gopls = {
+            hints = {
+              assignVariableTypes = true,
+              compositeLiteralFields = true,
+              compositeLiteralTypes = true,
+              constantValues = true,
+              functionTypeParameters = true,
+              parameterNames = true,
+              rangeVariableTypes = true,
+            },
+          },
+        },
       },
       zls = {
         cmd = { "zls" },
         on_new_config = function(new_config, new_root_dir)
-          if vim.fn.filereadable(vim.fs.joinpath(new_root_dir, 'zls.json')) ~= 0 then
-            new_config.cmd = { 'zls', '--config-path', 'zls.json' }
+          if vim.fn.filereadable(vim.fs.joinpath(new_root_dir, "zls.json")) ~= 0 then
+            new_config.cmd = { "zls", "--config-path", "zls.json" }
           end
         end,
         filetypes = { 'zig', 'zir' },
-        root_dir = require("lspconfig").util.root_pattern('zls.json', 'build.zig', '.git'),
+        root_dir = require("lspconfig").util.root_pattern("zls.json", "build.zig", ".git"),
         single_file_support = true,
       },
       clangd = {
@@ -84,7 +108,7 @@ return {
               editsNearCursor = true,
             },
           },
-          offsetEncoding = { 'utf-8', 'utf-16' },
+          offsetEncoding = { "utf-8", "utf-16" },
         },
       },
       rust_analyzer = {
@@ -143,11 +167,11 @@ return {
         },
       },
       fish_lsp = {
-        cmd = { 'fish-lsp', 'start' },
+        cmd = { "fish-lsp", "start" },
         cmd_env = { fish_lsp_show_client_popups = false },
-        filetypes = { 'fish' },
+        filetypes = { "fish" },
         root_dir = function(fname)
-          return vim.fs.dirname(vim.fs.find('.git', { path = fname, upward = true })[1])
+          return vim.fs.dirname(vim.fs.find(".git", { path = fname, upward = true })[1])
         end,
         single_file_support = true,
       },
@@ -161,58 +185,32 @@ return {
       postgres_lsp = {},
       jsonls = {},
       yamlls = {
-        cmd = { 'yaml-language-server', '--stdio' },
-        filetypes = { 'yaml' }
+        cmd = { "yaml-language-server", "--stdio" },
+        filetypes = { "yaml" }
       },
       ts_ls = {
-        init_options = { hostInfo = 'neovim' },
-        cmd = { 'typescript-language-server', '--stdio' },
+        init_options = { hostInfo = "neovim" },
+        cmd = { "typescript-language-server", "--stdio" },
         filetypes = {
-          'javascript',
-          'javascriptreact',
-          'javascript.jsx',
-          'typescript',
-          'typescriptreact',
-          'typescript.tsx',
+          "javascript",
+          "javascriptreact",
+          "javascript.jsx",
+          "typescript",
+          "typescriptreact",
+          "typescript.tsx",
         },
-        root_dir = require("lspconfig").util.root_pattern('tsconfig.json', 'jsconfig.json', 'package.json', '.git'),
+        root_dir = require("lspconfig").util.root_pattern("tsconfig.json", "jsconfig.json", "package.json", ".git"),
         single_file_support = true,
       },
     }
   },
   config = function(_, opts)
-    local lspconfig = require('lspconfig')
-    local keymap = vim.keymap
+    local lspconfig = require("lspconfig")
     for server, config in pairs(opts.servers) do
       -- passing config.capabilities to blink.cmp merges with the capabilities in your
       -- `opts[server].capabilities, if you've defined it
 
-      local on_attach = function(client, bufnr)
-        local bufopts = { noremap = true, silent = true, buffer = bufnr }
-        keymap.set("n", "gD", vim.lsp.buf.declaration, bufopts)
-        keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
-        keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
-        keymap.set("n", "*", vim.lsp.buf.code_action, bufopts)
-        keymap.set("n", "gi", vim.lsp.buf.implementation, bufopts)
-        keymap.set("n", "gk", vim.lsp.buf.signature_help, bufopts)
-        keymap.set("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, bufopts)
-        keymap.set("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, bufopts)
-        keymap.set("n", "<leader>wl", function()
-          print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-        end, bufopts)
-        keymap.set("n", "<leader>td", vim.lsp.buf.type_definition, bufopts)
-        keymap.set("n", "<leader>rn", vim.lsp.buf.rename, bufopts)
-        keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, bufopts)
-        keymap.set("n", "gr", vim.lsp.buf.references, bufopts)
-        keymap.set("n", "<leader>f", vim.lsp.buf.format, bufopts)
-        keymap.set("n", "<leader>do", vim.diagnostic.open_float, bufopts)
-        keymap.set("n", "gp", vim.diagnostic.goto_prev, bufopts)
-        keymap.set("n", "gl", vim.diagnostic.goto_next, bufopts)
-        keymap.set("n", "<leader>dl", vim.diagnostic.setloclist, bufopts)
-      end
-
       local capabilities = vim.lsp.protocol.make_client_capabilities()
-
       capabilities = vim.tbl_deep_extend('force', capabilities, require('blink.cmp').get_lsp_capabilities({}, false))
 
       capabilities = vim.tbl_deep_extend('force', capabilities, {
@@ -223,82 +221,25 @@ return {
           }
         }
       })
+
       config.capabilities = capabilities
-      config.on_attach = on_attach
       lspconfig[server].setup(config)
     end
 
     vim.o.updatetime = 250
 
-    -- function PrintDiagnostics(opts, bufnr, line_nr, client_id)
-    --   bufnr = bufnr or 0
-    --   line_nr = line_nr or (vim.api.nvim_win_get_cursor(0)[1] - 1)
-    --   opts = opts or { ['lnum'] = line_nr }
-    --
-    --   local line_diagnostics = vim.diagnostic.get(bufnr, opts)
-    --   if vim.tbl_isempty(line_diagnostics) then return end
-    --
-    --   local diagnostic_message = ""
-    --   for i, diagnostic in ipairs(line_diagnostics) do
-    --     diagnostic_message = diagnostic_message ..
-    --         string.format("󱒄 %s | %s", diagnostic.severity, diagnostic.message or "")
-    --     print(diagnostic_message)
-    --     if i ~= #line_diagnostics then
-    --       diagnostic_message = diagnostic_message .. "\n"
-    --     end
-    --   end
-    --   vim.api.nvim_echo({ { diagnostic_message, "Normal" } }, false, {})
-    -- end
-
-    -- Diagnostic symbols in the sign column (gutter)
+    -- Mostly turned off diagnostics except the gutter signs
     vim.diagnostic.config({
-      virtual_text = false,
-      -- virtual_text = { prefix = "󱒄" },
       signs = {
         text = {
           [vim.diagnostic.severity.ERROR] = " ",
-          [vim.diagnostic.severity.WARN] = " ",
+          [vim.diagnostic.severity.WARN] = " ",
           [vim.diagnostic.severity.INFO] = " ",
-          [vim.diagnostic.severity.HINT] = "󰠠 "
-        }
+          [vim.diagnostic.severity.HINT] = "󰠠 ",
+        },
       },
-      update_in_insert = false,
-      underline = true,
-      severity_sort = true,
-      float = {
-        border = "single",
-        source = "always",
-        header = "Diagnostics",
-        prefix = "",
-      },
-      virtual_lines = {
-        only_current_line = true,
-        spacing = 1,
-      },
+      virtual_text = false,
+      virtual_lines = false,
     })
-    -- uses the function above to display diagnostics in the cmd bar
-    -- vim.cmd([[ autocmd! CursorHold,CursorHoldI * lua PrintDiagnostics() ]])
-
-    -- this function auto generates the behavior of shift-k diagnostics
-    -- can be annoying and overlay the text to make it hard to read
-    -- vim.cmd([[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]])
-
-    vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
-      underline = false,
-      update_in_insert = false,
-      virtual_text = { spacing = 4, prefix = "●" },
-      severity_sort = true,
-    })
-
-    vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
-
-    vim.lsp.handlers["textDocument/signatureHelp"] =
-        vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
-
-    vim.cmd([[
-      " make hover window"s background transparent
-      highlight! link FloatBorder Normal
-      highlight! link NormalFloat Normal
-    ]])
   end
 }

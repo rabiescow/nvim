@@ -1,0 +1,8 @@
+{
+  // JavaScript
+  "const statement": {
+    "prefix": "co",
+    "body": "const ${0}",
+    "description": "const statement"
+  }
+}
