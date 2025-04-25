@@ -162,7 +162,10 @@ return {
     -- See the fuzzy documentation for more information
 
     fuzzy = {
-      prebuilt_binaries = { download = false },
+      prebuilt_binaries = {
+        download = false,
+        ignore_version_mismatch = true,
+      },
       sorts = { "score" },
     },
 

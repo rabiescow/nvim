@@ -1,5 +1,5 @@
 return {
-  "norcalli/nvim-colorizer.lua",
+  "rabiescow/nvim-colorizer.lua",
   lazy = false,
   config = function()
     require("colorizer").setup({

@@ -16,7 +16,6 @@ require("lazy").setup({
   spec = {
     { import = "plugins" },
     { import = "plugins.themes" },
-    { import = "plugins.lsp" },
   },
 
   git = {
@@ -49,10 +48,10 @@ vim.api.nvim_set_option("clipboard", "unnamed")
 vim.opt.termguicolors = true
 vim.cmd.colorscheme("oscura")
 -- highlight last yank
-vim.api.nvim_create_autocmd("TextYankPost", {
+--[[ vim.api.nvim_create_autocmd("TextYankPost", {
   desc = "highlight when yanking text",
   group = vim.api.nvim_create_augroup("kickstart", { clear = true }),
   callback = function()
     vim.highlight.on_yank()
   end,
-})
+}) ]]

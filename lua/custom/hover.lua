@@ -3,8 +3,7 @@
 function Hover()
   local group = vim.api.nvim_create_augroup("Diagnostics", {})
   local buffer = vim.api.nvim_get_current_buf()
-  local event = 'CursorHold'
-  local event2 = "CursorHoldI"
+  local event = { 'CursorHold', 'CursorHoldI' }
   local hoverOpts = {
     scope = "line",
     header = "Line diagnostics:",
@@ -22,26 +21,11 @@ function Hover()
     title = "Line Diagnostics",
     title_pos = "center",
     fixed = true,
-    -- border = "rounded",
-    -- border = { "╔", "═", "╗", "║", "╝", "═", "╚", "║" },
   }
   vim.api.nvim_create_autocmd(event, {
     buffer = buffer,
     group = group,
 
-    callback = function()
-      local _, windownr =
-          vim.diagnostic.open_float(hoverOpts, { focusable = false })
-      if windownr ~= nil then
-        local config = vim.api.nvim_win_get_config(windownr)
-        config = vim.tbl_extend("force", config, dialog)
-        vim.api.nvim_win_set_config(windownr, config)
-      end
-    end
-  })
-  vim.api.nvim_create_autocmd(event2, {
-    buffer = buffer,
-    group = group,
     callback = function()
       local _, windownr =
           vim.diagnostic.open_float(hoverOpts, { focusable = false })
