@@ -7,25 +7,107 @@ return {
   config = function()
     local lsp = require("lspconfig")
     local capabilities = vim.lsp.protocol.make_client_capabilities()
-    capabilities = vim.tbl_deep_extend("force", capabilities,
-      require("blink.cmp").get_lsp_capabilities({}, false))
     local on_attach = function(client, bufnr)
-      if client.server_capabilities.code_lens then
-        local codelens = vim.api.nvim_create_augroup("LSPCodeLens",
-          { clear = true })
-        vim.api.nvim_create_autocmd(
-          { "BufEnter", "InsertLeave", "CursorHold" }, {
-            buffer = bufnr,
-            group = codelens,
-            callback = function()
-              vim.lsp.codelens.refresh()
-            end,
-          })
+      -- Inlay Hint provider config
+      -- Only turn on inlay hints when not in Insert mode
+      if client.server_capabilities.inlayHintProvider then
+        local inlayhint = vim.api.nvim_create_augroup(
+          "LspInlayHint", { clear = true })
+        vim.api.nvim_create_autocmd({ "InsertLeave", "BufEnter" }, {
+          buffer = bufnr,
+          group = inlayhint,
+          callback = function()
+            vim.g.inlay_hints_visible = true
+            vim.lsp.inlay_hint.enable(true, { bufnr })
+          end
+        })
+        vim.api.nvim_create_autocmd({ "InsertEnter" }, {
+          buffer = bufnr,
+          group = inlayhint,
+          callback = function()
+            vim.g.inlay_hints_visible = false
+            vim.lsp.inlay_hint.enable(false, { bufnr })
+          end
+        })
+      else
+        print("no inlay_hints available")
+      end
+
+      -- Code Lens provider config
+      if client.server_capabilities.codeLensProvider then
+        local codelens = vim.api.nvim_create_augroup(
+          "LSPCodeLens", { clear = true })
+        vim.api.nvim_create_autocmd({ "InsertLeave", "BufEnter" }, {
+          buffer = bufnr,
+          group = codelens,
+          callback = function()
+            vim.lsp.codelens.refresh()
+            local lenses = vim.lsp.codelens.get(bufnr)
+            vim.lsp.codelens.display(lenses, bufnr, client.id)
+          end,
+        })
+        vim.api.nvim_create_autocmd({ "InsertEnter" }, {
+          buffer = bufnr,
+          group = codelens,
+          callback = function()
+            vim.lsp.codelens.clear(client.id, bufnr)
+          end,
+        })
+      end
+
+      -- Hover Provider config
+      if client.server_capabilities.hoverProvider then
+        local group = vim.api.nvim_create_augroup("Diagnostics", {})
+        local buffer = vim.api.nvim_get_current_buf()
+        local event = { 'CursorHold' }
+        local hoverOpts = {
+          focusable = false,
+          close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
+          scope = "line",
+          header = "Line diagnostics:",
+          width = 40,
+          height = 15,
+          max_heigth = 15,
+        }
+        local secondaryOpts = {
+          focusable = false,
+          close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
+          source = "always",
+        }
+        local dialog = {
+          relative = "win",
+          win = vim.api.nvim_get_current_win(),
+          anchor = "NW",
+          row = 1,
+          col = 43,
+          focusable = false,
+          title = "Line Diagnostics",
+          title_pos = "center",
+          fixed = true,
+        }
+        vim.api.nvim_create_autocmd(event, {
+          buffer = buffer,
+          group = group,
+
+          callback = function()
+            local _, windownr =
+                vim.diagnostic.open_float(hoverOpts, secondaryOpts)
+            if windownr ~= nil then
+              local config = vim.api.nvim_win_get_config(windownr)
+              config = vim.tbl_extend("force", config, dialog)
+              vim.api.nvim_win_set_config(windownr, config)
+            end
+          end
+        })
       end
     end
 
+    capabilities = vim.tbl_deep_extend("force", capabilities,
+      require("blink.cmp").get_lsp_capabilities({}, false))
 
     lsp.ocamllsp.setup({
+      capabilities = capabilities,
+      on_attach = on_attach,
       cmd = { "ocamllsp" },
       filetypes = {
         "ocaml",
@@ -42,18 +124,15 @@ return {
         "dune-project",
         "dune-workspace"
       ),
+      -- grabbed from https://github.com/ocaml/ocaml-lsp/blob/3dc1a6633bfe2ebd34d7aa38f008c8c28300ee55/ocaml-lsp-server/docs/ocamllsp/config.md
       settings = {
-        ocaml = {
-          extendedHover = true,
-          codelens = true,
-          duneDiagnostics = true,
-          inlayHints = true,
-          syntaxDocumentation = true,
-          merlinJumpCodeActions = true,
-        },
+        extendedHover = { enable = true },
+        codelens = { enable = true },
+        duneDiagnostics = { enable = true },
+        inlayHints = { enable = true },
+        syntaxDocumentation = { enable = true },
+        merlinJumpCodeActions = { enable = true },
       },
-      capabilities = capabilities,
-      on_attach = on_attach
     })
 
     lsp.lua_ls.setup({
@@ -66,6 +145,7 @@ return {
       log_level = vim.lsp.protocol.MessageType.Warning,
       settings = {
         Lua = {
+          telemetry = { enable = false },
           completion = {
             callSnippet = "Replace",
             displayContext = 2,
@@ -142,15 +222,14 @@ return {
             or vim.fs.dirname(vim.fs.find(".git", { path = fname, upward = true })[1])
       end,
       single_file_support = true,
-      -- capabilities = {
-      --   textDocument = {
-      --     completion = {
-      --       editsNearCursor = true,
-      --     },
-      --   },
-      --   offsetEncoding = { "utf-8", "utf-16" },
-      -- },
-      capabilities = capabilities,
+      capabilities = {
+        textDocument = {
+          completion = {
+            editsNearCursor = true,
+          },
+        },
+        offsetEncoding = { "utf-8", "utf-16" },
+      },
       on_attach = on_attach
     })
 
@@ -297,5 +376,9 @@ return {
       capabilities = capabilities,
       on_attach = on_attach
     })
+
+    vim.cmd([[
+      lua vim.lsp.codelens.refresh({ bufnr = 0 })
+    ]])
   end
 }
