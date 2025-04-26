@@ -1,2 +1,2 @@
-require("custom")
 require("./lazy")
+require("custom")

@@ -376,9 +376,5 @@ return {
       capabilities = capabilities,
       on_attach = on_attach
     })
-
-    vim.cmd([[
-      lua vim.lsp.codelens.refresh({ bufnr = 0 })
-    ]])
   end
 }

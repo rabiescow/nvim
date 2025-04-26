@@ -6,7 +6,7 @@ return { {
   opts = {},
 },
   {
-    "stevearc/oil.nvim",
+    "rabiescow/oil.nvim",
     dependencies = { { "echasnovski/mini.icons", opts = {} } },
     config = function()
       require("oil").setup({
