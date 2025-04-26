@@ -1,5 +1,4 @@
 {
-  // Declarations
   "var statement": {
     "scope": "javascript,typescript,javascriptreact,typescriptreact",
     "prefix": "v",
@@ -48,7 +47,6 @@
     "body": "const {${1:name}} = ${2:value}",
     "description": "destructuring const assignment"
   },
-  // Flow Control
   "if statement": {
     "scope": "javascript,typescript,javascriptreact,typescriptreact",
     "prefix": "if",
@@ -133,7 +131,6 @@
     "body": "switch (${1:expr}) {\n\tcase ${2:value}:\n\t\treturn $0\n\tdefault:\n\t\treturn\n}",
     "description": "switch case"
   },
-  // Functions
   "anonymous function": {
     "scope": "javascript,typescript,javascriptreact,typescriptreact",
     "prefix": "f",
@@ -194,7 +191,6 @@
     "body": "function* ${1:name}(${2:arguments}) {\n\t${0}\n}",
     "description": "named generator function (ES6)"
   },
-  // Iterables
   "sequence of 0..n": {
     "scope": "javascript,typescript,javascriptreact,typescriptreact",
     "prefix": "seq",
@@ -231,7 +227,6 @@
     "body": "${1}.find(${2:item} => {\n\t${0}\n})",
     "description": "find"
   },
-  // Objects and Classes
   "object literal": {
     "scope": "javascript,typescript,javascriptreact,typescriptreact",
     "prefix": "ol",
@@ -316,7 +311,6 @@
     "body": "Object.assign({}, ${1:original}, ${2:source})",
     "description": "Object.assign copy (shallow clone)"
   },
-  // Returning values
   "return": {
     "scope": "javascript,typescript,javascriptreact,typescriptreact",
     "prefix": "r",
@@ -335,7 +329,6 @@
     "body": "return (\n\t${0}\n)",
     "description": "return complex value (such as JSX components)"
   },
-  // Types
   "typeof": {
     "scope": "javascript,typescript,javascriptreact,typescriptreact",
     "prefix": "tof",
@@ -348,7 +341,6 @@
     "body": "${1:source} instanceof ${2:Object}",
     "description": "instanceof"
   },
-  // Promises
   "promise": {
     "scope": "javascript,typescript,javascriptreact,typescriptreact",
     "prefix": "pr",
@@ -367,7 +359,6 @@
     "body": "${1:promise}.catch((${2:err}) => {\n\t${0}\n})",
     "description": "Promise.catch"
   },
-  // ES6 Modules
   "export (ES6)": {
     "scope": "javascript,typescript,javascriptreact,typescriptreact",
     "prefix": "ex",
@@ -392,7 +383,6 @@
     "body": "import ${1:*} as ${2:name} from '${3:module}'",
     "description": "import module as (ES6)"
   },
-  // Node.js
   "Node.js style callback": {
     "scope": "javascript,typescript,javascriptreact,typescriptreact",
     "prefix": "cb",
@@ -459,7 +449,6 @@
     "body": "${1:emitter}.on('${2:event}', (${3:arguments}) => {\n\t${0}\n})",
     "description": "event handler"
   },
-  // Testing (Jest, Mocha, Jasmine, etc.)
   "describe": {
     "scope": "javascript,typescript,javascriptreact,typescriptreact",
     "prefix": "desc",
@@ -514,7 +503,6 @@
     "body": "afterEach(() => {\n\t${0}\n})",
     "description": "after each test"
   },
-  // Console
   "console.log": {
     "scope": "javascript,typescript,javascriptreact,typescriptreact",
     "prefix": "cl",
@@ -551,7 +539,6 @@
     "body": "console.warn('${0}', ${0})",
     "description": "console.warn labeled"
   },
-  // Timers
   "setTimeout": {
     "scope": "javascript,typescript,javascriptreact,typescriptreact",
     "prefix": "st",
@@ -576,7 +563,6 @@
     "body": "process.nextTick(() => {\n\t${0}\n})",
     "description": "process nextTick"
   },
-  // Miscellaneous
   "insert 'use strict' statement": {
     "scope": "javascript,typescript,javascriptreact,typescriptreact",
     "prefix": "us",
