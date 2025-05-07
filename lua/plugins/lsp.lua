@@ -1,62 +1,43 @@
-return {
-    "neovim/nvim-lspconfig",
-    dependencies = {"saghen/blink.cmp", "b0o/SchemaStore.nvim"},
-    config = function()
-        local lsp = require("lspconfig")
-        local capabilities = vim.lsp.protocol.make_client_capabilities()
-        local on_attach = function(client, bufnr)
-            -- Inlay Hint provider config
-            -- Only turn on inlay hints when not in Insert mode
-            if client.server_capabilities.inlayHintProvider then
-                local inlayhint = vim.api.nvim_create_augroup("LspInlayHint",
-                                                              {clear = true})
-                vim.api.nvim_create_autocmd({"InsertLeave", "BufEnter"}, {
-                    buffer = bufnr,
-                    group = inlayhint,
-                    callback = function()
-                        vim.g.inlay_hints_visible = true
-                        vim.lsp.inlay_hint.enable(true, {bufnr})
-                    end
-                })
-                vim.api.nvim_create_autocmd({"InsertEnter"}, {
-                    buffer = bufnr,
-                    group = inlayhint,
-                    callback = function()
-                        vim.g.inlay_hints_visible = false
-                        vim.lsp.inlay_hint.enable(false, {bufnr})
-                    end
-                })
-            else
-                print("no inlay_hints available")
-            end
+-- local function underline_diagnostics(client, bufnr)
+--     if client.server_capabilities.hoverProvider then
+--         local augroup = vim.api.nvim_create_augroup("LspUnderline",
+--                                                     {clear = true})
+--         local event = {"BufEnter"}
+--         vim.api.nvim_create_autocmd(event, {
+--             buffer = bufnr,
+--             group = augroup,
+--             callback = function()
+--                 diagnosts = vim.diagnostic.get(bufnr,
+--                                                {vim.diagnostic.severity.ERROR})
+--                 if diagnosts then
+--                     for _, d in diagnosts do
+--                         vim.fn.sign_define("LspLinecolor",
+--                                            {texthl = "Error", text = ""})
+--                         line = d.lnum
+--                         vim.api.nvim_get_current_line()
+--                     end
+--                 end
+--             end
+--         })
+--     end
+-- end
+local function inline_float_diagnostics(client, bufnr)
+    -- Hover Provider config
+    if client.server_capabilities.hoverProvider then
+        local augroup = vim.api.nvim_create_augroup("LspDiagnostics",
+                                                    {clear = true})
+        local event = {"BufEnter", "CursorHold"}
+        vim.api.nvim_create_autocmd(event, {
+            buffer = bufnr,
+            group = augroup,
 
-            -- Code Lens provider config
-            if client.server_capabilities.codeLensProvider then
-                local codelens = vim.api.nvim_create_augroup("LSPCodeLens",
-                                                             {clear = true})
-                vim.api.nvim_create_autocmd({"InsertLeave", "BufEnter"}, {
-                    buffer = bufnr,
-                    group = codelens,
-                    callback = function()
-                        vim.lsp.codelens.refresh()
-                        local lenses = vim.lsp.codelens.get(bufnr)
-                        vim.lsp.codelens.display(lenses, bufnr, client.id)
-                    end
-                })
-                vim.api.nvim_create_autocmd({"InsertEnter"}, {
-                    buffer = bufnr,
-                    group = codelens,
-                    callback = function()
-                        vim.lsp.codelens.clear(client.id, bufnr)
-                    end
-                })
-            end
-
-            -- Hover Provider config
-            if client.server_capabilities.hoverProvider then
-                local group = vim.api.nvim_create_augroup("Diagnostics", {})
-                local buffer = vim.api.nvim_get_current_buf()
-                local event = {'CursorHold'}
+            callback = function()
+                local currentWidth, _ = Get_editor_dimensions()
+                local diagnosticsWidth = math.floor(math.abs(currentWidth / 2))
+                local diagnosticsHeight = 12
+                local diagnosticsColumn = currentWidth - (diagnosticsWidth + 3)
+                local diagnosticsRow = Get_diagnostics_position(
+                                           diagnosticsHeight)
                 local hoverOpts = {
                     focusable = false,
                     close_events = {
@@ -64,9 +45,9 @@ return {
                     },
                     scope = "line",
                     header = "Line diagnostics:",
-                    width = 40,
-                    height = 15,
-                    max_heigth = 15
+                    width = diagnosticsWidth,
+                    height = diagnosticsHeight,
+                    max_heigth = diagnosticsHeight
                 }
                 local secondaryOpts = {
                     focusable = false,
@@ -79,30 +60,91 @@ return {
                     relative = "win",
                     win = vim.api.nvim_get_current_win(),
                     anchor = "NW",
-                    row = 1,
-                    col = 43,
+                    row = diagnosticsRow,
+                    col = diagnosticsColumn,
                     focusable = false,
                     title = "Line Diagnostics",
                     title_pos = "center",
-                    fixed = true
+                    fixed = true,
+                    border = "rounded"
                 }
-                vim.api.nvim_create_autocmd(event, {
-                    buffer = buffer,
-                    group = group,
-
-                    callback = function()
-                        local _, windownr =
-                            vim.diagnostic.open_float(hoverOpts, secondaryOpts)
-                        if windownr ~= nil then
-                            local config = vim.api.nvim_win_get_config(windownr)
-                            config = vim.tbl_extend("force", config, dialog)
-                            vim.api.nvim_win_set_config(windownr, config)
-                        end
-                    end
-                })
+                local _, windownr = vim.diagnostic.open_float(hoverOpts,
+                                                              secondaryOpts)
+                if windownr ~= nil then
+                    local config = vim.api.nvim_win_get_config(windownr)
+                    config = vim.tbl_extend("force", config, dialog)
+                    vim.api.nvim_win_set_config(windownr, config)
+                end
             end
-        end
+        })
+    end
+end
 
+local function code_lens(client, bufnr)
+    local augroup_lens = vim.api.nvim_create_augroup("LSPCodeLens",
+                                                     {clear = true})
+
+    -- Code Lens provider config
+    if client.server_capabilities.codeLensProvider then
+        vim.api.nvim_create_autocmd({"InsertLeave", "BufEnter", "LspAttach"}, {
+            buffer = bufnr,
+            group = augroup_lens,
+            callback = function()
+                vim.lsp.codelens.refresh()
+                local lenses = vim.lsp.codelens.get(bufnr)
+                vim.lsp.codelens.display(lenses, bufnr, client.id)
+            end
+        })
+        vim.api.nvim_create_autocmd({"InsertEnter"}, {
+            buffer = bufnr,
+            group = augroup_lens,
+            callback = function()
+                vim.lsp.codelens.clear(client.id, bufnr)
+            end
+        })
+    end
+end
+
+local function inlay_hints(client, bufnr)
+    local augroup_inlay = vim.api.nvim_create_augroup("LSPInlayHint",
+                                                      {clear = true})
+    -- Inlay Hint provider config
+    -- Only turn on inlay hints when not in Insert mode
+    if client.server_capabilities.inlayHintProvider then
+        vim.api.nvim_create_autocmd({"InsertLeave", "BufEnter", "LspAttach"}, {
+            buffer = bufnr,
+            group = augroup_inlay,
+            callback = function()
+                vim.g.inlay_hints_visible = true
+                vim.lsp.inlay_hint.enable(true, {bufnr})
+            end
+        })
+        vim.api.nvim_create_autocmd({"InsertEnter"}, {
+            buffer = bufnr,
+            group = augroup_inlay,
+            callback = function()
+                vim.g.inlay_hints_visible = false
+                vim.lsp.inlay_hint.enable(false, {bufnr})
+            end
+        })
+    else
+        print("no inlay hints available")
+    end
+end
+
+local function attach(client, bufnr)
+    inlay_hints(client, bufnr)
+    code_lens(client, bufnr)
+    inline_float_diagnostics(client, bufnr)
+end
+
+return {
+    "neovim/nvim-lspconfig",
+    dependencies = {"saghen/blink.cmp", "b0o/SchemaStore.nvim"},
+    config = function()
+        local lsp = require("lspconfig")
+        local capabilities = vim.lsp.protocol.make_client_capabilities()
+        local on_attach = function(client, bufnr) attach(client, bufnr) end
         capabilities = vim.tbl_deep_extend("force", capabilities, require(
                                                "blink.cmp").get_lsp_capabilities(
                                                {}, false))
@@ -151,16 +193,42 @@ return {
                         keywordSnippet = "Both"
                     },
                     format = {enable = true},
+                    codelens = {enable = true},
                     hint = {
                         enable = true,
                         arrayIndex = "Enable",
-                        setType = true
+                        setType = true,
+                        semicolon = "All"
                     },
-                    diagnostics = {enable = true, globals = {"vim"}},
-                    runtime = {version = "LuaJIT"},
+                    diagnostics = {
+                        enable = true,
+                        disable = {"lowercase-global"},
+                        globals = {"vim"}
+                    },
+                    hover = {
+                        enumsLimit = 10,
+                        expandAlias = true,
+                        previewFields = 50,
+                        viewNumber = true,
+                        viewString = true,
+                        viewStringMax = 200
+                    },
+                    misc = {
+                        parameters = {},
+                        executablePath = "/usr/bin/lua-language-server"
+
+                    },
+                    runtime = {
+                        version = "LuaJIT",
+                        path = {"?.lua", "../init.lua", "?/init.lua"}
+                    },
                     workspace = {
                         checkThirdParty = "ApplyInMemory",
-                        library = {vim.env.VIMRUNTIME, "${3rd}/luv/library"}
+                        library = {
+                            vim.env.VIMRUNTIME, "${3rd}/luv/library",
+                            "/usr/share/lua/5.4/luarocks",
+                            "~/.local/share/nvim/lazy"
+                        }
                     }
                 }
             },

@@ -1,21 +1,17 @@
 return {
-  "petertriho/nvim-scrollbar",
-  dependencies = { "folke/tokyonight.nvim" },
-  config = function()
-    local colors = require("tokyonight.colors").setup()
-
-    require("scrollbar").setup({
-      handle = {
-        color = colors.bg_highlight,
-      },
-      marks = {
-        Search = { color = colors.orange },
-        Error = { color = colors.error },
-        Warn = { color = colors.warning },
-        Info = { color = colors.info },
-        Hint = { color = colors.hint },
-        Misc = { color = colors.purple },
-      }
-    })
-  end
+    "petertriho/nvim-scrollbar",
+    dependencies = {},
+    config = function()
+        require("scrollbar").setup({
+            handle = {color = "#545468"},
+            marks = {
+                Search = {color = "#131343"},
+                Error = {color = "#B83434"},
+                Warn = {color = "#B87834"},
+                Info = {color = "#B3A3C3"},
+                Hint = {color = "#3434B8"},
+                Misc = {color = "#232323"}
+            }
+        })
+    end
 }

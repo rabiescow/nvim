@@ -37,4 +37,8 @@ require("lazy").setup({
     }
 })
 
-vim.cmd.colorscheme("oscura")
+if vim.bo.filetype == "ocaml" then
+    vim.cmd.colorscheme("bluloco")
+else
+    vim.cmd.colorscheme("oscura")
+end
