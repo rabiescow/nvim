@@ -32,9 +32,6 @@ opt.signcolumn = "yes" -- show sign column so that text doesn't shift
 -- backspace
 opt.backspace = "indent,eol,start" -- allow backspace on indent, end of line or insert mode start position
 
--- clipboard
--- opt.clipboard:append("unnamedplus") -- use system clipboard as default register
-
 -- split windows
 opt.splitright = true -- split vertical window to the right
 opt.splitbelow = true -- split horizontal window to the bottom
@@ -70,7 +67,14 @@ opt.colorcolumn = "80"
 --  See `:help 'list'`
 --  and `:help 'listchars'`
 opt.list = true
-opt.listchars = {tab = "» ", trail = "·", nbsp = "␣"}
+opt.listchars = {
+    eol = "⤶",
+    nbsp = "˾",
+    space = "∙", -- ∙⬝
+    tab = ">-",
+    trail = "●" -- ⦁●
+
+}
 
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
 opt.hlsearch = true

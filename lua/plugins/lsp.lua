@@ -1,26 +1,3 @@
--- local function underline_diagnostics(client, bufnr)
---     if client.server_capabilities.hoverProvider then
---         local augroup = vim.api.nvim_create_augroup("LspUnderline",
---                                                     {clear = true})
---         local event = {"BufEnter"}
---         vim.api.nvim_create_autocmd(event, {
---             buffer = bufnr,
---             group = augroup,
---             callback = function()
---                 diagnosts = vim.diagnostic.get(bufnr,
---                                                {vim.diagnostic.severity.ERROR})
---                 if diagnosts then
---                     for _, d in diagnosts do
---                         vim.fn.sign_define("LspLinecolor",
---                                            {texthl = "Error", text = ""})
---                         line = d.lnum
---                         vim.api.nvim_get_current_line()
---                     end
---                 end
---             end
---         })
---     end
--- end
 local function inline_float_diagnostics(client, bufnr)
     -- Hover Provider config
     if client.server_capabilities.hoverProvider then
@@ -34,7 +11,7 @@ local function inline_float_diagnostics(client, bufnr)
             callback = function()
                 local currentWidth, _ = Get_editor_dimensions()
                 local diagnosticsWidth = math.floor(math.abs(currentWidth / 2))
-                local diagnosticsHeight = 12
+                local diagnosticsHeight = 8
                 local diagnosticsColumn = currentWidth - (diagnosticsWidth + 3)
                 local diagnosticsRow = Get_diagnostics_position(
                                            diagnosticsHeight)
@@ -83,23 +60,19 @@ end
 local function code_lens(client, bufnr)
     local augroup_lens = vim.api.nvim_create_augroup("LSPCodeLens",
                                                      {clear = true})
+    local codelens = require("custom.codelens")
 
     -- Code Lens provider config
     if client.server_capabilities.codeLensProvider then
-        vim.api.nvim_create_autocmd({"InsertLeave", "BufEnter", "LspAttach"}, {
+        vim.api
+            .nvim_create_autocmd( -- {"BufEnter", "InsertLeave", "LspAttach"}, {
+        {"SafeState"}, {
             buffer = bufnr,
             group = augroup_lens,
             callback = function()
-                vim.lsp.codelens.refresh()
-                local lenses = vim.lsp.codelens.get(bufnr)
-                vim.lsp.codelens.display(lenses, bufnr, client.id)
-            end
-        })
-        vim.api.nvim_create_autocmd({"InsertEnter"}, {
-            buffer = bufnr,
-            group = augroup_lens,
-            callback = function()
-                vim.lsp.codelens.clear(client.id, bufnr)
+                codelens.refresh()
+                local lenses = codelens.get(bufnr)
+                codelens.display(lenses, bufnr, client.id)
             end
         })
     end
@@ -111,7 +84,7 @@ local function inlay_hints(client, bufnr)
     -- Inlay Hint provider config
     -- Only turn on inlay hints when not in Insert mode
     if client.server_capabilities.inlayHintProvider then
-        vim.api.nvim_create_autocmd({"InsertLeave", "BufEnter", "LspAttach"}, {
+        vim.api.nvim_create_autocmd({"BufEnter", "InsertLeave", "LspAttach"}, {
             buffer = bufnr,
             group = augroup_inlay,
             callback = function()
@@ -133,8 +106,8 @@ local function inlay_hints(client, bufnr)
 end
 
 local function attach(client, bufnr)
-    inlay_hints(client, bufnr)
     code_lens(client, bufnr)
+    inlay_hints(client, bufnr)
     inline_float_diagnostics(client, bufnr)
 end
 
@@ -148,7 +121,6 @@ return {
         capabilities = vim.tbl_deep_extend("force", capabilities, require(
                                                "blink.cmp").get_lsp_capabilities(
                                                {}, false))
-
         lsp.ocamllsp.setup({
             capabilities = capabilities,
             on_attach = on_attach,
@@ -163,9 +135,14 @@ return {
             -- grabbed from https://github.com/ocaml/ocaml-lsp/blob/3dc1a6633bfe2ebd34d7aa38f008c8c28300ee55/ocaml-lsp-server/docs/ocamllsp/config.md
             settings = {
                 extendedHover = {enable = true},
+                standardHover = {enable = true},
                 codelens = {enable = true},
                 duneDiagnostics = {enable = true},
-                inlayHints = {enable = true},
+                inlayHints = {
+                    hintPatternVariables = true,
+                    hintLetBindings = true,
+                    hintFunctionParams = true
+                },
                 syntaxDocumentation = {enable = true},
                 merlinJumpCodeActions = {enable = true}
             }
@@ -174,14 +151,10 @@ return {
         lsp.lua_ls.setup({
             cmd = {"lua-language-server"},
             filetypes = {"lua"},
-            root_dir = require("lspconfig").util.root_pattern("luarc.json",
-                                                              "luarc.jsonc",
-                                                              "luacheckrc",
-                                                              ".stylua.toml",
-                                                              "stylua.toml",
-                                                              "selene.toml",
-                                                              "selene.yml",
-                                                              ".git"),
+            root_dir = lsp.util.root_pattern("luarc.json", "luarc.jsonc",
+                                             "luacheckrc", ".stylua.toml",
+                                             "stylua.toml", "selene.toml",
+                                             "selene.yml", ".git"),
             single_file_support = true,
             log_level = vim.lsp.protocol.MessageType.Warning,
             settings = {
@@ -203,7 +176,7 @@ return {
                     diagnostics = {
                         enable = true,
                         disable = {"lowercase-global"},
-                        globals = {"vim"}
+                        globals = {"vim", "require"}
                     },
                     hover = {
                         enumsLimit = 10,
@@ -267,9 +240,7 @@ return {
                 end
             end,
             filetypes = {'zig', 'zir'},
-            root_dir = require("lspconfig").util.root_pattern("zls.json",
-                                                              "build.zig",
-                                                              ".git"),
+            root_dir = lsp.util.root_pattern("zls.json", "build.zig", ".git"),
             single_file_support = true,
             capabilities = capabilities,
             on_attach = on_attach
@@ -283,7 +254,7 @@ return {
             },
             filetypes = {"c", "cpp", "objc", "objcpp", "cuda", "proto"},
             root_dir = function(fname)
-                local util = require("lspconfig").util
+                local util = lsp.util
                 return util.root_pattern(".clangd", ".clang-tidy",
                                          ".clang-format",
                                          "compile_commands.json",
@@ -321,11 +292,9 @@ return {
         lsp.hls.setup({
             cmd = {"haskell-language-server-wrapper", "--lsp"},
             filetypes = {"haskell", "lhaskell"},
-            root_dir = require("lspconfig").util.root_pattern("hie.yaml",
-                                                              "stack.yaml",
-                                                              "cabal.project",
-                                                              "*.cabal",
-                                                              "package.yaml"),
+            root_dir = lsp.util.root_pattern("hie.yaml", "stack.yaml",
+                                             "cabal.project", "*.cabal",
+                                             "package.yaml"),
             single_file_support = true,
             settings = {
                 haskell = {
@@ -438,10 +407,8 @@ return {
                 "javascript", "javascriptreact", "javascript.jsx", "typescript",
                 "typescriptreact", "typescript.tsx"
             },
-            root_dir = require("lspconfig").util.root_pattern("tsconfig.json",
-                                                              "jsconfig.json",
-                                                              "package.json",
-                                                              ".git"),
+            root_dir = lsp.util.root_pattern("tsconfig.json", "jsconfig.json",
+                                             "package.json", ".git"),
             single_file_support = true,
             capabilities = capabilities,
             on_attach = on_attach
@@ -449,7 +416,29 @@ return {
 
         lsp.hyprls.setup({capabilities = capabilities, on_attach = on_attach})
 
-        lsp.elixirls.setup({capabilities = capabilities, on_attach = on_attach})
+        lsp.elixirls.setup({
+            cmd = {"/usr/lib/elixir-ls/language_server.sh"},
+            filetypes = {'elixir', 'eelixir', 'heex', 'surface'},
+            root_dir = function(fname)
+                return lsp.util
+                           .root_pattern('.formatter.exs', 'mix.exs', '.git')(
+                           fname) or lsp.util.path.dirname(fname)
+            end,
+            capabilities = capabilities,
+            on_attach = on_attach
+        })
+
+        lsp.erlangls.setup({
+            cmd = {"erlang_ls"},
+            filetypes = {"erlang"},
+            root_dir = function(fname)
+                return lsp.util
+                           .root_pattern('rebar.config', 'erlang.mk', '.git')(
+                           fname) or lsp.util.path.dirname(fname)
+            end,
+            capabilities = capabilities,
+            on_attach = on_attach
+        })
 
         lsp.fortls.setup({capabilities = capabilities, on_attach = on_attach})
 
@@ -460,6 +449,11 @@ return {
         lsp.serve_d.setup({capabilities = capabilities, on_attach = on_attach})
 
         lsp.qmlls.setup({capabilities = capabilities, on_attach = on_attach})
+
+        lsp.clojure_lsp.setup({
+            capabilities = capabilities,
+            on_attach = on_attach
+        })
 
         lsp.postgres_lsp.setup({
             capabilities = capabilities,

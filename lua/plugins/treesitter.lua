@@ -7,9 +7,6 @@ return {
             "nvim-treesitter/nvim-treesitter-textobjects",
             "windwp/nvim-ts-autotag"
         },
-        -- init = function()
-        --   vim.api.nvim_set_var("enfocado_plugins", { "surround" })
-        -- end,
         config = function()
             -- import nvim-treesitter plugin
             local treesitter = require("nvim-treesitter.configs")

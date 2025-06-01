@@ -1,2 +1,3 @@
-require("./lazy")
 require("custom")
+require("./lazy")
+require("diagnostics")

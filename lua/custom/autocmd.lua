@@ -2,7 +2,9 @@
 vim.api.nvim_create_autocmd("TextYankPost", {
     desc = "highlight when yanking text",
     group = vim.api.nvim_create_augroup("yanker", {clear = true}),
-    callback = function() vim.highlight.on_yank() end
+    callback = function()
+        vim.highlight.on_yank({higroup = "CurSearch", timeout = 1000})
+    end
 })
 
 -- local format_sync_grp = api.nvim_create_augroup("goimports", {})

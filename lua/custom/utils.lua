@@ -1,5 +1,3 @@
----@return integer width
----@return integer height
 function Get_editor_dimensions()
     local statusline_height = 0
     local laststatus = vim.opt.laststatus:get()
@@ -15,7 +13,6 @@ function Get_editor_dimensions()
 end
 
 ---@param diagnosticsHeight integer
----@return integer display_row
 function Get_diagnostics_position(diagnosticsHeight)
     local display_top = nil
     local first_line = vim.fn.line("w0")
