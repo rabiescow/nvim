@@ -1,1 +1,0 @@
-require("diagnostics.config")
