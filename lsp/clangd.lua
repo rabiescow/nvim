@@ -1,34 +1,23 @@
 return {
-            cmd = {
-                'clangd', '--clang-tidy', '--header-insertion=iwyu',
-                '--completion-style=detailed', '--fallback-style=none',
-                '--function-arg-placeholders=false'
-            },
-            filetypes = {"c", "cpp", "objc", "objcpp", "cuda", "proto"},
-    root_markers = {"zls.json", "build.zig", ".git"},
+    cmd = {
+        'clangd', '--clang-tidy', '--header-insertion=iwyu',
+        '--completion-style=detailed', '--fallback-style=none',
+        '--function-arg-placeholders=false'
+    },
+    filetypes = {"c", "cpp", "objc", "objcpp", "cuda", "proto"},
+    root_markers = {
+        ".clangd", ".clang-tidy", ".clang-format", "compile_commands.json",
+        "compile_flags.txt", "configure.ac", ".git"
+    },
     single_file_support = true,
     on_new_config = function(new_config, new_root_dir)
-        if vim.fn
-            .filereadable(vim.fs.joinpath(new_root_dir, "zls.json")) ~=
-            0 then
+        if vim.fn.filereadable(vim.fs.joinpath(new_root_dir, "zls.json")) ~= 0 then
             new_config.cmd = {"zls", "--config-path", "zls.json"}
         end
     end,
-    capabilities = vim.tbl_deep_extend(
-        "force",
-        {},
-        vim.lsp.protocol.make_client_capabilities(),
-        require("blink.cmp").get_lsp_capabilities(),
-        {
-            fileOperations = {
-                didRename = true,
-                willRename = true,
-            },
-        }
-    ),
+    capabilities = get_complete_capabilities(),
     on_attach = function(client, bufnr)
         code_lens(client, bufnr)
         inlay_hints(client, bufnr)
-        inline_float_diagnostics(client, bufnr)
-    end,
+    end
 }

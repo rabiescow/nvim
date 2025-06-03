@@ -47,28 +47,16 @@ return {
             workspace = {
                 checkThirdParty = "ApplyInMemory",
                 library = {
-                    vim.env.VIMRUNTIME, "${3rd}/luv/library",
+                    vim.env.VIMRUNTIME, "${3rd}/luv/library"
                     -- "/usr/share/lua/5.4/luarocks", "~/.local/share/nvim/lazy"
                 }
             }
         }
     },
-    capabilities = vim.tbl_deep_extend(
-        "force",
-        {},
-        vim.lsp.protocol.make_client_capabilities(),
-        require("blink.cmp").get_lsp_capabilities(),
-        {
-            fileOperations = {
-                didRename = true,
-                willRename = true,
-            },
-        }
-    ),
+    capabilities = get_complete_capabilities(),
     log_level = vim.lsp.protocol.MessageType.Warning,
     on_attach = function(client, bufnr)
         code_lens(client, bufnr)
         inlay_hints(client, bufnr)
-        inline_float_diagnostics(client, bufnr)
-    end,
+    end
 }

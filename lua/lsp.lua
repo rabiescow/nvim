@@ -1,7 +1,7 @@
 vim.lsp.enable({
-    "gopls", "lua_ls", "ocamllsp", "clangd", "elixirls", "erlangls", "eslint",
-    "fish_lsp", "fortls", "hls", "html", "hyprls", "jsonls", "pyright",
-    "rustanalyzer", "taplo", "ts_ls", "yamlls", "zls"
+    "gopls", "lua_ls", "ocamllsp", "clangd", "elixirls", "erlangls", "fish_lsp",
+    "hls", "html", "jsonls", "rustanalyzer", "taplo", "yamlls", "zls"
+    -- , "eslint", "fortls", "hyprls", "pyright", "ts_ls"
 })
 
 vim.diagnostic.config({
