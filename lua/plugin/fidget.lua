@@ -5,14 +5,10 @@ return {
             -- Options related to LSP progress subsystem
             progress = {
                 poll_rate = 0,
-                suppress_on_insert = false,
+                suppress_on_insert = true,
                 ignore_done_already = false,
-                ignore_empty_message = false,
+                ignore_empty_message = true,
                 clear_on_detach = function(client_id)
-                    local function sleep(n)
-                        os.execute("sleep " .. tonumber(n))
-                    end
-                    sleep(2)
                     local client = vim.lsp.get_client_by_id(client_id)
                     return client and client.name or nil
                 end,
@@ -61,7 +57,7 @@ return {
             -- Options related to notification subsystem
             notification = {
                 poll_rate = 10,
-                filter = 0,
+                filter = vim.log.levels.TRACE,
                 history_size = 500,
                 override_vim_notify = true,
                 configs = {
@@ -72,13 +68,13 @@ return {
                     icon_style = "FidgetIcon",
                     annote_style = "FidgetNormal",
                     debug_style = "FidgetNormal",
-                    info_style = "FidgetIcon",
-                    warn_style = "WarningMsg",
-                    error_style = "ErrorMsg",
+                    info_style = "DiagnosticInfo",
+                    warn_style = "DiagnosticWarn",
+                    error_style = "DiagnosticError",
                     debug_annote = "DEBUG",
-                    info_annote = "FidgetNormal",
-                    warn_annote = "WARN",
-                    error_annote = "ERROR",
+                    info_annote = "DiagnosticInfo",
+                    warn_annote = "DiagnosticWarn",
+                    error_annote = "DiagnosticError",
                     update_hook = function(item)
                         require("fidget.notification").set_content_key(item)
                     end
@@ -98,8 +94,7 @@ return {
                     group_separator = "╰──────╮",
                     group_separator_hl = "FidgetSep",
                     render_message = function(msg, cnt)
-                        return cnt == 1 and msg or
-                                   string.format("(%dx) %s", cnt, msg)
+                        return cnt == 1 and msg or string.format("%s", msg)
                     end
                 },
 
@@ -107,13 +102,13 @@ return {
                 window = {
                     normal_hl = "FidgetNormal",
                     winblend = 0,
-                    border = "none",
+                    border = "single",
                     zindex = 122245,
                     max_width = 0,
                     max_height = 0,
                     x_padding = 3,
                     y_padding = 1,
-                    align = "top",
+                    align = "bottom",
                     relative = "editor"
                 }
             },

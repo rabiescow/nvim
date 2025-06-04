@@ -8,6 +8,8 @@ return {
 
         local datetime = {'datetime', style = "%F %T"}
 
+        local workspaces = require("config.workspace")
+
         local diff = {
             "diff",
             colored = true,
@@ -126,8 +128,8 @@ return {
 
             sections = {
                 lualine_a = {mode},
-                lualine_b = {filename, "encoding", filetype, location},
-                lualine_c = {},
+                lualine_b = {workspaces, "encoding", filetype, location},
+                lualine_c = {filename},
                 lualine_x = {branch, diff},
                 lualine_y = {diagnostic, lsp},
                 lualine_z = {datetime}

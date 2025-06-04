@@ -1,3 +1,33 @@
+function get_complete_capabilities()
+    -- neovim default capabilities
+    local default = vim.lsp.protocol.make_client_capabilities();
+    -- blink.nvim capabilitites:
+    local blink = require("blink.cmp").get_lsp_capabilities();
+    -- combined capabilitites
+    local combined = vim.tbl_deep_extend("force", default, blink)
+
+    -- if you manually want to ensure specific capabilities
+    -- inlay hints
+    combined.textDocument = combined.textDocument or {}
+    combined.textDocument.inlayHint = combined.textDocument.inlayHint or {}
+    combined.textDocument.inlayHint.dynamicRegistration = true
+    combined.textDocument.inlayHint.resolveSupport =
+        combined.textDocument.inlayHint.resolveSupport or {}
+    combined.textDocument.inlayHint.resolveSupport.properties =
+        combined.textDocument.inlayHint.resolveSupport.properties or {
+            "tooltip", "label.tooltip" -- etc.
+        }
+
+    -- code lens
+    combined.textDocument.codeLens = combined.textDocument.codeLens or {}
+    combined.textDocument.codeLens.dynamicRegistration = true
+    combined.workspace = combined.workspace or {}
+    combined.workspace.codeLens = combined.workspace.codeLens or {}
+    combined.workspace.codeLens.refreshSupport = true
+
+    return combined
+end
+
 function dumpTable(tbl, indent)
     indent = indent or 0
     for k, v in pairs(tbl) do
@@ -10,7 +40,7 @@ function dumpTable(tbl, indent)
     end
 end
 
-function Get_editor_dimensions()
+function get_editor_dimensions()
     local statusline_height = 0
     local laststatus = vim.opt.laststatus:get()
     if laststatus == 2 or laststatus == 3 or
@@ -25,12 +55,12 @@ function Get_editor_dimensions()
 end
 
 ---@param diagnosticsHeight integer
-function Get_diagnostics_position(diagnosticsHeight)
+function get_diagnostics_position(diagnosticsHeight)
     local display_top = nil
     local first_line = vim.fn.line("w0")
     local current_line = vim.api.nvim_win_get_cursor(0)[1]
 
-    _, row_max = Get_editor_dimensions()
+    _, row_max = get_editor_dimensions()
     local window_pos = vim.api.nvim_win_get_position(0)
     local cursor_pos = window_pos[1] + (current_line - first_line)
 

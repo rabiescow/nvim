@@ -3,7 +3,9 @@ return {
     lazy = false,
     priority = 1000,
     config = function()
-        require("catppuccin").setup({
+        local M = require("catppuccin")
+        local U = require("catppuccin.utils.colors")
+        M.setup({
             flavour = "mocha", -- latte, frappe, macchiato, mocha
             background = {light = "latte", dark = "mocha"},
             transparent_background = false,
@@ -67,9 +69,29 @@ return {
                         fg = colors.pink,
                         italic = true
                     },
+                    ["DiagnosticUnderlineError"] = {
+                        fg = colors.base,
+                        bg = colors.red
+                    },
+                    ["DiagnosticUnderlineWarning"] = {
+                        fg = colors.base,
+                        bg = colors.peach
+                    },
+                    ["DiagnosticUnderlineHint"] = {
+                        fg = colors.base,
+                        bg = colors.teal
+                    },
+                    ["DiagnosticUnderlineInfo"] = {
+                        fg = colors.base,
+                        bg = colors.blue
+                    },
 
                     LspCodeLens = {fg = colors.hint, bold = true, italic = true}, -- virtual text of the codelens
-                    LspInlayHint = {fg = colors.hint, italic = true} -- virtual text of the inlay hints
+                    LspInlayHint = {fg = colors.hint, italic = true}, -- virtual text of the inlay hints
+                    CursorLine = {
+                        fg = U.brighten(colors.lavender, 0.3, colors.text),
+                        bg = U.darken(colors.surface0, 0.2, colors.base)
+                    }
                 }
             end,
             default_integrations = true,
@@ -88,11 +110,9 @@ return {
                 },
                 treesitter = true,
                 mini = {enabled = true, indentscope_color = ""},
-                native_lsp = {
-                    enabled = true,
-                    inlay_hints = {background = false}
-                }
+                native_lsp = {enabled = true, inlay_hints = {background = true}}
             }
         })
+        return M
     end
 }

@@ -7,16 +7,19 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     end
 })
 
--- local format_sync_grp = api.nvim_create_augroup("goimports", {})
--- vim.api.nvim_create_autocmd({"InsertLeave", "BufWritePre"}, {
---     pattern = "*.go",
---     callback = function() require('go.format').goimports() end,
---     group = vim.api.nvim_create_augroup("goimports_on_insertleave",
---                                         {clear = true})
--- })
-
 vim.api.nvim_create_autocmd({'BufDelete', 'BufWipeout'}, {
     group = vim.api.nvim_create_augroup('wshada_on_delete', {clear = true}),
     desc = 'Write to ShaDa when deleting/wiping out buffers',
     command = 'wshada'
+})
+
+local hover_diag_notify_augroup = vim.api.nvim_create_augroup(
+                                      "CustomHoverDiagnosticsNotify",
+                                      {clear = true})
+
+vim.api.nvim_create_autocmd("CursorHold", {
+    group = hover_diag_notify_augroup,
+    pattern = "*",
+    callback = show_hover_diagnostic_via_notify,
+    desc = "Show diagnostics via notify on hover"
 })

@@ -47,8 +47,8 @@ return {
             workspace = {
                 checkThirdParty = "ApplyInMemory",
                 library = {
-                    vim.env.VIMRUNTIME, "${3rd}/luv/library"
-                    -- "/usr/share/lua/5.4/luarocks", "~/.local/share/nvim/lazy"
+                    vim.env.VIMRUNTIME, "${3rd}/luv/library",
+                    "/usr/share/lua/5.4/luarocks"
                 }
             }
         }
@@ -58,5 +58,7 @@ return {
     on_attach = function(client, bufnr)
         code_lens(client, bufnr)
         inlay_hints(client, bufnr)
+        -- hover(client, bufnr)
     end
 }
+
