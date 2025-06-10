@@ -73,7 +73,7 @@ return {
                         fg = colors.base,
                         bg = colors.red
                     },
-                    ["DiagnosticUnderlineWarning"] = {
+                    ["DiagnosticUnderlineWarn"] = {
                         fg = colors.base,
                         bg = colors.peach
                     },
@@ -89,9 +89,20 @@ return {
                     LspCodeLens = {fg = colors.hint, bold = true, italic = true}, -- virtual text of the codelens
                     LspInlayHint = {fg = colors.hint, italic = true}, -- virtual text of the inlay hints
                     CursorLine = {
-                        fg = U.brighten(colors.lavender, 0.3, colors.text),
-                        bg = U.darken(colors.surface0, 0.2, colors.base)
-                    }
+                        -- fg = U.brighten(colors.lavender, 0.3, colors.text),
+                        bg = U.darken(colors.lavender, 0.15, colors.base)
+                    },
+
+                    Pmenu = {fg = colors.blue, bg = colors.mantle},
+                    PmenuSel = {
+                        fg = colors.blue,
+                        bg = colors.mantle,
+                        italic = true
+                    },
+
+                    BlinkCmpMenu = {fg = colors.blue, bg = colors.mantle},
+                    BlinkCmpMenuBorder = {fg = colors.blue, bg = colors.mantle},
+                    BlinkCmpMenuSelection = {fg = colors.text, italic = true}
                 }
             end,
             default_integrations = true,
@@ -110,7 +121,10 @@ return {
                 },
                 treesitter = true,
                 mini = {enabled = true, indentscope_color = ""},
-                native_lsp = {enabled = true, inlay_hints = {background = true}}
+                native_lsp = {
+                    enabled = true,
+                    inlay_hints = {background = false}
+                }
             }
         })
         return M

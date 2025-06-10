@@ -9,7 +9,7 @@
       // Runtime and builtin libraries.
       "$VIMRUNTIME/lua",
       "${3rd}/luv/library",
-      "lua/plugins/lsp.lua",
+      "init.lua",
     ]
   }
 }

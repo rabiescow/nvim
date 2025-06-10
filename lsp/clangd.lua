@@ -7,7 +7,7 @@ return {
     filetypes = {"c", "cpp", "objc", "objcpp", "cuda", "proto"},
     root_markers = {
         ".clangd", ".clang-tidy", ".clang-format", "compile_commands.json",
-        "compile_flags.txt", "configure.ac", ".git"
+        "compile_flags.txt", "configure.ac", ".git", "CMakeList.txt", "CMake*"
     },
     single_file_support = true,
     on_new_config = function(new_config, new_root_dir)

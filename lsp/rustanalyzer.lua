@@ -263,6 +263,5 @@ return {
     on_attach = function(client, bufnr)
         code_lens(client, bufnr)
         inlay_hints(client, bufnr)
-        inline_float_diagnostics(client, bufnr)
     end
 }

@@ -1,3 +1,22 @@
+function open_oil_on_dashboard_ready()
+    print("function triggered!")
+    local oil_is_already_open = false
+    for _, winid in ipairs(vim.api.nvim_list_wins()) do
+        if vim.api.nvim_win_is_valid(winid) then
+            local buf_in_win = vim.api.nvim_win_get_buf(winid)
+            if vim.api.nvim_buf_is_valid(buf_in_win) and
+                vim.bo[buf_in_win].filetype == 'oil' then
+                oil_is_already_open = true
+                break
+            end
+        end
+    end
+
+    if not oil_is_already_open then
+        vim.schedule(function() vim.cmd("Oil --float") end)
+    end
+end
+
 function show_hover_diagnostic_via_notify()
     local current_win = vim.api.nvim_get_current_win()
     local current_buf = vim.api.nvim_win_get_buf(current_win)
@@ -81,62 +100,6 @@ function hover(client, bufnr)
             callback = function() hover.hover(opts) end
         })
     end
-end
-
-function inline_float_diagnostics(_, bufnr)
-    -- Hover Provider config
-    local augroup = vim.api
-                        .nvim_create_augroup("LspDiagnostics", {clear = true})
-    local event = {"BufEnter", "CursorHold"}
-    vim.api.nvim_create_autocmd(event, {
-        buffer = bufnr,
-        group = augroup,
-
-        callback = function()
-            local currentWidth, _ = get_editor_dimensions()
-            local diagnosticsWidth = math.floor(math.abs(currentWidth / 2))
-            local diagnosticsHeight = 8
-            local diagnosticsColumn = currentWidth - (diagnosticsWidth + 3)
-            local diagnosticsRow = get_diagnostics_position(diagnosticsHeight)
-            local hoverOpts = {
-                focusable = false,
-                close_events = {
-                    "BufLeave", "CursorMoved", "InsertEnter", "FocusLost"
-                },
-                scope = "line",
-                header = "Line diagnostics:",
-                width = diagnosticsWidth,
-                height = diagnosticsHeight,
-                max_heigth = diagnosticsHeight
-            }
-            local secondaryOpts = {
-                focusable = false,
-                close_events = {
-                    "BufLeave", "CursorMoved", "InsertEnter", "FocusLost"
-                },
-                source = "always"
-            }
-            local dialog = {
-                relative = "win",
-                win = vim.api.nvim_get_current_win(),
-                anchor = "NW",
-                row = diagnosticsRow,
-                col = diagnosticsColumn,
-                focusable = false,
-                title = "Line Diagnostics",
-                title_pos = "center",
-                fixed = true,
-                border = "rounded"
-            }
-            local _, windownr = vim.diagnostic.open_float(hoverOpts,
-                                                          secondaryOpts)
-            if windownr ~= nil then
-                local config = vim.api.nvim_win_get_config(windownr)
-                config = vim.tbl_extend("force", config, dialog)
-                vim.api.nvim_win_set_config(windownr, config)
-            end
-        end
-    })
 end
 
 function code_lens(client, bufnr)

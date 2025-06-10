@@ -18,4 +18,5 @@ keymap.set("n", "<leader>z", "<CMD>wq<CR>", {silent = false})
 -- Oil floating window keymap
 keymap.set("n", "-", "<CMD>Oil --float<CR>",
            {desc = "Browse current working directory"})
-
+-- select all
+keymap.set("n", "<C-a>", "ggVG", {desc = "the windows select all"})

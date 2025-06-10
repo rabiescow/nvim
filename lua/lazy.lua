@@ -26,4 +26,6 @@ require("lazy").setup({
     change_detection = {enabled = false, notify = true}
 })
 
+vim.o.background = "dark"
 vim.cmd.colorscheme "catppuccin"
+

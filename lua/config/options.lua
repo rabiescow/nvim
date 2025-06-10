@@ -8,10 +8,14 @@ opt.number = true -- shows absolute line number on cursor line (when relative nu
 opt.undofile = true
 
 -- tabs & indentation
-opt.tabstop = 2 -- 2 spaces for tabs (prettier default)
-opt.shiftwidth = 2 -- 2 spaces for indent width
 opt.expandtab = true -- expand tab to spaces
+opt.shiftwidth = 4 -- 4 spaces for indent width
+opt.tabstop = 4 -- 4 spaces for tabs (prettier default)
+opt.softtabstop = 4 -- How many spaces are applied when pressing Tab
+opt.smarttab = true
+opt.smartindent = true
 opt.autoindent = true -- copy indent from current line when starting new one
+opt.breakindent = true
 
 -- line wrapping
 opt.wrap = false -- disable line wrapping
@@ -19,9 +23,14 @@ opt.wrap = false -- disable line wrapping
 -- search settings
 opt.ignorecase = true -- ignore case when searching
 opt.smartcase = true -- if you include mixed case in your search, assumes you want case-sensitive
+opt.incsearch = true
+opt.hlsearch = true
 
 -- cursor line
 opt.cursorline = true -- highlight the current cursor line
+--
+-- Enable mouse mode, can be useful for resizing splits for example!
+opt.mouse = "a"
 
 -- turn on termguicolors for nightfly colorscheme to work
 -- (have to use iterm2 or any other true color terminal)
@@ -30,18 +39,23 @@ opt.background = "dark" -- colorschemes that can be light or dark will be made d
 opt.signcolumn = "yes" -- show sign column so that text doesn't shift
 
 -- backspace
-opt.backspace = "indent,eol,start" -- allow backspace on indent, end of line or insert mode start position
+opt.backspace = "indent,eol,start,nostop" -- allow backspace on indent, end of line or insert mode start position
 
 -- split windows
 opt.splitright = true -- split vertical window to the right
 opt.splitbelow = true -- split horizontal window to the bottom
 
--- turn off swapfile
-opt.swapfile = false
+-- use swapfile
+opt.swapfile = true
 
--- enable incremental search
-opt.incsearch = true
-opt.hlsearch = true
+-- use backup file
+opt.backup = true
+opt.backupcopy = "yes"
+opt.backupext = ".tmp"
+opt.backupdir = vim.fn.expand("$XDG_STATE_HOME/nvim/backup")
+
+-- Don't show the mode, since it's already in the status line
+opt.showmode = false
 
 -- Better splitting
 opt.splitbelow = true
@@ -64,8 +78,6 @@ opt.scrolloff = 2
 opt.colorcolumn = "80"
 
 -- Sets how neovim will display certain whitespace in the editor.
---  See `:help 'list'`
---  and `:help 'listchars'`
 opt.list = true
 opt.listchars = {
     eol = "⤶",
@@ -73,14 +85,15 @@ opt.listchars = {
     space = "∙", -- ∙⬝
     tab = ">-",
     trail = "●" -- ⦁●
-
 }
-
--- Set highlight on search, but clear on pressing <Esc> in normal mode
-opt.hlsearch = true
 
 -- this is for obsidian to work properly
 opt.conceallevel = 1
 
 -- clipboard provider
 vim.api.nvim_set_option_value("clipboard", "unnamedplus", {scope = "global"})
+
+-- Command line options
+vim.o.cmdheight = 0
+vim.o.cmdwinheight = 10
+

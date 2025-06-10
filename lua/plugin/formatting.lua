@@ -23,6 +23,7 @@ return {
             dune = {"format-dune-file"},
             elm = {"elm-format"},
             fish = {"fish_indent"},
+            fortran = {"fprettify", "findent"},
             go = {"goimports", "gofmt", "golines"},
             haskell = {"hindent"},
             java = {"google-java-format"},
