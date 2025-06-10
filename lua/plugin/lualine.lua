@@ -8,7 +8,7 @@ return {
 
         local datetime = {'datetime', style = "%F %T"}
 
-        local workspaces = require("config.lualine_workspace")
+        local workspaces = lualine_workspace()
 
         local diff = {
             "diff",

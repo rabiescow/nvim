@@ -55,10 +55,6 @@ return {
     },
     capabilities = get_complete_capabilities(),
     log_level = vim.lsp.protocol.MessageType.Warning,
-    on_attach = function(client, bufnr)
-        code_lens(client, bufnr)
-        inlay_hints(client, bufnr)
-        -- hover(client, bufnr)
-    end
+    on_attach = on_attach
 }
 

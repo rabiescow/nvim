@@ -20,9 +20,6 @@ return {
         syntaxDocumentation = {enable = true},
         merlinJumpCodeActions = {enable = true}
     },
-    on_attach = function(client, bufnr)
-        code_lens(client, bufnr)
-        inlay_hints(client, bufnr)
-    end,
+    on_attach = on_attach,
     capabilities = get_complete_capabilities()
 }
