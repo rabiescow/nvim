@@ -4,5 +4,5 @@ return {
     filetypes = {"fish"},
     single_file_support = true,
     capabilities = get_complete_capabilities(),
-    on_attach = on_attach
+    on_attach = attach
 }

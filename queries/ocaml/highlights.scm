@@ -223,19 +223,19 @@
     "]"
   ] @punctuation.special)
 
-(attribute
+((attribute
   (attribute_id) @attribute.method
-  (attribute_payload) @attribute.name) @attribute.ppx
+  (attribute_payload) @attribute.name) @attribute.ppx (#set! priority 130))
 
 (item_attribute
   [
     "[@@"
     "]"
-  ] @punctuation.special)
+  ] @punctuation.special (#set! priority 130))
 
-(item_attribute
+((item_attribute
   (attribute_id) @attribute.method
-  (attribute_payload) @attribute.name) @attribute.ppx
+  (attribute_payload) @attribute.name) @attribute.ppx (#set! priority 130))
 
 (floating_attribute
   [
@@ -243,19 +243,19 @@
     "]"
   ] @punctuation.special)
 
-(floating_attribute
+((floating_attribute
   (attribute_id) @attribute.method
-  (attribute_payload) @attribute.name) @attribute.ppx
+  (attribute_payload) @attribute.name) @attribute.ppx)
 
 (extension
   [
     "[%"
     "]"
-  ] @punctuation.special)
+  ] @punctuation.special (#set! priority 133))
 
-(extension
+((extension
   (attribute_id) @attribute.method
-  (attribute_payload) @attribute.name) @attribute.ppx
+  (attribute_payload) @attribute.name) @attribute.ppx (#set! priority 132))
 
 (item_extension
   [

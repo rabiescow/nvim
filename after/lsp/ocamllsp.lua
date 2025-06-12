@@ -20,6 +20,6 @@ return {
         syntaxDocumentation = {enable = true},
         merlinJumpCodeActions = {enable = true}
     },
-    on_attach = on_attach,
-    capabilities = get_complete_capabilities()
+    capabilities = get_complete_capabilities(),
+    on_attach = attach
 }

@@ -49,6 +49,8 @@ return {
                     ["@keyword.module.name.ocaml"] = {fg = colors.maroon},
                     ["@keyword.type.ocaml"] = {fg = colors.pink},
                     ["@variable.ocaml"] = {link = "Function"},
+                    ["@attribute.ppx.ocaml"] = {fg = colors.yellow},
+                    ["@attribute.method.ocaml"] = {fg = colors.maroon},
 
                     ["@lsp.type.keyword.zig"] = {
                         fg = colors.peach,
@@ -102,7 +104,15 @@ return {
 
                     BlinkCmpMenu = {fg = colors.blue, bg = colors.mantle},
                     BlinkCmpMenuBorder = {fg = colors.blue, bg = colors.mantle},
-                    BlinkCmpMenuSelection = {fg = colors.text, italic = true}
+                    BlinkCmpMenuSelection = {fg = colors.text, italic = true},
+
+                    OilPermissionExecute = {fg = colors.red},
+                    OilPermissionWrite = {fg = colors.peach},
+                    OilPermissionRead = {fg = colors.lavender},
+                    OilPermissionNA = {fg = colors.subtext0},
+                    OilSize = {fg = colors.text},
+                    OilType = {fg = colors.yellow, italic = true},
+                    OilMtime = {fg = colors.flamingo, italic = true}
                 }
             end,
             default_integrations = true,

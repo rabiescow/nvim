@@ -1,15 +1,39 @@
-local function ghost()
+local function hover_diagnostic(_, bufnr)
     local api = vim.api
     local fn = vim.fn
 
-    -- create the hover diagnostic namespace
     local hover_diag_win = {
         win_id = nil,
         buf_id = nil,
-        ns_id = api.nvim_create_namespace("GhostHoverHighlights") -- A namespace for our paint job.
+        ns_id = api.nvim_create_namespace("HoverHighlights") -- A namespace for our paint job.
     }
 
-    -- clears the diagnostics when moving away from line
+    --- Wraps a given string to a specified width.
+    --- Respects existing newlines and attempts to break on word boundaries.
+    ---@param text string The text to wrap.
+    ---@param width integer The maximum width of a line.
+    ---@return table<string> A list of strings, one for each wrapped line.
+    local function wrap_text(text, width)
+        local lines = {}
+        -- Respect existing newlines in the message
+        for s in text:gmatch("[^\r\n]+") do
+            local start = 1
+            while start <= #s do
+                local break_pos = start + width
+                if break_pos < #s then
+                    -- Try to find the last space before the break position to wrap at a word
+                    local last_space = s:sub(start, break_pos):match(".*%s")
+                    if last_space then
+                        break_pos = start + #last_space - 1
+                    end
+                end
+                table.insert(lines, s:sub(start, break_pos))
+                start = break_pos + 1
+            end
+        end
+        return lines
+    end
+
     local function clear_hover_diagnostic_float()
         if hover_diag_win.win_id and
             api.nvim_win_is_valid(hover_diag_win.win_id) then
@@ -27,28 +51,24 @@ local function ghost()
         clear_hover_diagnostic_float()
 
         local current_win = api.nvim_get_current_win()
-        local current_buf = api.nvim_win_get_buf(current_win)
 
-        if not api.nvim_buf_is_valid(current_buf) or
-            fn.getbufvar(current_buf, '&modifiable') == 0 then return end
-
+        if not api.nvim_buf_is_valid(bufnr) or fn.getbufvar(bufnr, 'modifiable') ==
+            0 then return end
         local cursor_line = api.nvim_win_get_cursor(current_win)[1] - 1
-        local diagnostics_on_line = vim.diagnostic.get(current_buf,
+        local diagnostics_on_line = vim.diagnostic.get(bufnr,
                                                        {lnum = cursor_line})
 
         if not diagnostics_on_line or vim.tbl_isempty(diagnostics_on_line) then
             return
         end
 
-        -- The secret symbols. You need a Nerd Font for these!
         local icons = {
-            [vim.diagnostic.severity.ERROR] = "   ", -- Skull / Error Icon
-            [vim.diagnostic.severity.WARN] = "   ", -- Warning Triangle
-            [vim.diagnostic.severity.INFO] = "   ", -- Info Circle
-            [vim.diagnostic.severity.HINT] = " 󰠠  " -- Lightbulb / Hint
+            [vim.diagnostic.severity.ERROR] = "   ",
+            [vim.diagnostic.severity.WARN] = "   ",
+            [vim.diagnostic.severity.INFO] = "   ",
+            [vim.diagnostic.severity.HINT] = " 󰠠  "
         }
 
-        -- The highlight groups that match the symbols. Our paint cans.
         local highlights = {
             [vim.diagnostic.severity.ERROR] = "DiagnosticError",
             [vim.diagnostic.severity.WARN] = "DiagnosticWarn",
@@ -56,56 +76,69 @@ local function ghost()
             [vim.diagnostic.severity.HINT] = "DiagnosticHint"
         }
 
+        local wrap_at = 50
+
         local lines_for_float = {}
         local highlights_to_apply = {}
         local max_line_width = 0
 
         for i, diag in ipairs(diagnostics_on_line) do
-            local icon = icons[diag.severity] or ''
-            local message = diag.message:gsub("[\n\r]+", " ") -- Flatten the message
-            local line_to_add = icon .. "[" .. i .. "] " .. message
+            local icon = icons[diag.severity] or ""
+            local source_info = "[" .. (diag.source or "LSP") .. "] "
+            local prefix = icon .. source_info
 
-            table.insert(lines_for_float, line_to_add)
+            local indent = string.rep(" ", fn.strdisplaywidth(prefix))
+
+            local message_lines = wrap_text(diag.message, wrap_at)
+            local diag_start_line = #lines_for_float
+
+            if message_lines[1] then
+                local full_line = prefix .. message_lines[1]
+                table.insert(lines_for_float, full_line)
+                max_line_width = math.max(max_line_width,
+                                          fn.strdisplaywidth(full_line))
+            end
+
+            for i = 2, #message_lines do
+                local full_line = indent .. message_lines[i]
+                table.insert(lines_for_float, full_line)
+                max_line_width = math.max(max_line_width,
+                                          fn.strdisplaywidth(full_line))
+            end
+
             table.insert(highlights_to_apply, {
-                line = i - 1, -- 0-indexed line number in the new buffer
-                hl_group = highlights[diag.severity] or 'Normal'
+                start_line = diag_start_line,
+                end_line = #lines_for_float - 1,
+                hl_group = highlights[diag.severity] or "Normal"
             })
-            max_line_width = math.max(max_line_width,
-                                      fn.strdisplaywidth(line_to_add))
         end
 
         if vim.tbl_isempty(lines_for_float) then return end
 
-        -- Figure out the size of the ghost window
-        local parent_win_width = api.nvim_win_get_width(current_win)
-        local float_width = math.min(max_line_width + 2,
-                                     math.floor(parent_win_width * 0.75))
+        local win_width = api.nvim_win_get_width(current_win)
         local float_height = #lines_for_float
+        local float_width = max_line_width
 
-        -- Make the secret buffer for the ghost
         hover_diag_win.buf_id = api.nvim_create_buf(false, true)
         api.nvim_buf_set_lines(hover_diag_win.buf_id, 0, -1, false,
                                lines_for_float)
-        -- api.nvim_buf_set_option(hover_diag_win.buf_id, 'modifiable', false)
         api.nvim_set_option_value("modifiable", false,
                                   {buf = hover_diag_win.buf_id})
 
-        -- Now we paint the lines *after* putting them in the buffer
         for _, hl in ipairs(highlights_to_apply) do
             vim.hl.range(hover_diag_win.buf_id, hover_diag_win.ns_id,
-                         hl.hl_group, {hl.line, 0}, {hl.line, -1})
+                         hl.hl_group, {hl.start_line, 0}, {hl.end_line, -1})
         end
 
-        -- Open the ghost window in the corner
         hover_diag_win.win_id = api.nvim_open_win(hover_diag_win.buf_id, false,
                                                   {
-            relative = 'win',
+            relative = "win",
             win = current_win,
-            anchor = 'NE',
+            anchor = "NE",
             width = float_width,
             height = float_height,
-            row = 0,
-            col = parent_win_width - 1,
+            row = 1,
+            col = win_width - 1,
             focusable = false,
             zindex = 150,
             style = "minimal",
@@ -113,25 +146,23 @@ local function ghost()
         })
     end
 
-    -- This is the setup. Call it from your main config.
-    -- The lookout crew.
-    local hover_diag_augroup = api.nvim_create_augroup(
-                                   "MyWarPaintHoverDiagnostics", {clear = true})
+    local hover_diag_augroup = api.nvim_create_augroup("HoverDiagnostics",
+                                                       {clear = true})
 
-    -- The lookout for when you stop.
-    api.nvim_create_autocmd("CursorHold", {
+    api.nvim_create_autocmd({
+        "CursorHold", "BufEnter", "LspAttach", "ModeChanged", "SafeState"
+    }, {
         group = hover_diag_augroup,
-        pattern = "*",
-        callback = show_hover_diagnostic_float,
-        desc = "Show ghost diagnostics with war paint"
+        buffer = bufnr,
+        callback = function() show_hover_diagnostic_float() end,
+        desc = "Show hover diagnostics in corner"
     })
 
-    -- The lookout for when you move. Makes the ghost vanish.
     api.nvim_create_autocmd({"CursorMoved", "BufLeave", "ModeChanged"}, {
         group = hover_diag_augroup,
-        pattern = "*",
-        callback = clear_hover_diagnostic_float,
-        desc = "Clear ghost diagnostics"
+        buffer = bufnr,
+        callback = function() clear_hover_diagnostic_float() end,
+        desc = "Clear hover diagnostics"
     })
 end
 
@@ -181,8 +212,8 @@ local function inlay_hints(client, bufnr)
     end
 end
 
-function on_attach(client, bufnr)
+function attach(client, bufnr)
     code_lens(client, bufnr)
     inlay_hints(client, bufnr)
-    ghost()
+    hover_diagnostic(client, bufnr)
 end

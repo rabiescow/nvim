@@ -59,5 +59,5 @@ return {
         }
     },
     capabilities = get_complete_capabilities(),
-    on_attach = on_attach
+    on_attach = attach
 }

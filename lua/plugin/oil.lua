@@ -1,3 +1,10 @@
+local permission_hlgroups = {
+    ["-"] = "OilPermissionNA",
+    ["r"] = "OilPermissionRead",
+    ["w"] = "OilPermissionWrite",
+    ["x"] = "OilPermissionExecute"
+}
+
 return {
     {
         "FerretDetective/oil-git-signs.nvim",
@@ -15,7 +22,22 @@ return {
                 default_file_explorer = true,
                 -- Id is automatically added at the beginning, and name at the end
                 -- See :help oil-columns
-                columns = {"type", "icon", "permissions", "size", "mtime"},
+                columns = {
+                    {"type", highlight = "OilType"}, "icon", {
+                        "permissions",
+                        highlight = function(permission_str)
+                            local hls = {}
+                            for i = 1, #permission_str do
+                                local char = permission_str:sub(i, i)
+                                table.insert(hls, {
+                                    permission_hlgroups[char], i - 1, i
+                                })
+                            end
+                            return hls
+                        end
+                    }, {"size", highlight = "OilSize"},
+                    {"mtime", highlight = "OilMtime"}
+                },
                 -- Buffer-local options to use for oil buffers
                 buf_options = {buflisted = false, bufhidden = "hide"},
                 -- Window-local options to use for oil buffers
