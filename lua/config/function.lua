@@ -78,7 +78,7 @@ local function hover_diagnostic(_, bufnr)
 
         local wrap_at = 50
 
-        local lines_for_float = {}
+        local lines_for_hover = {}
         local highlights_to_apply = {}
         local max_line_width = 0
 
@@ -90,38 +90,38 @@ local function hover_diagnostic(_, bufnr)
             local indent = string.rep(" ", fn.strdisplaywidth(prefix))
 
             local message_lines = wrap_text(diag.message, wrap_at)
-            local diag_start_line = #lines_for_float
+            local diag_start_line = #lines_for_hover
 
             if message_lines[1] then
                 local full_line = prefix .. message_lines[1]
-                table.insert(lines_for_float, full_line)
+                table.insert(lines_for_hover, full_line)
                 max_line_width = math.max(max_line_width,
                                           fn.strdisplaywidth(full_line))
             end
 
             for i = 2, #message_lines do
                 local full_line = indent .. message_lines[i]
-                table.insert(lines_for_float, full_line)
+                table.insert(lines_for_hover, full_line)
                 max_line_width = math.max(max_line_width,
                                           fn.strdisplaywidth(full_line))
             end
 
             table.insert(highlights_to_apply, {
                 start_line = diag_start_line,
-                end_line = #lines_for_float - 1,
+                end_line = #lines_for_hover - 1,
                 hl_group = highlights[diag.severity] or "Normal"
             })
         end
 
-        if vim.tbl_isempty(lines_for_float) then return end
+        if vim.tbl_isempty(lines_for_hover) then return end
 
         local win_width = api.nvim_win_get_width(current_win)
-        local float_height = #lines_for_float
-        local float_width = max_line_width
+        local hover_height = #lines_for_hover
+        local hover_width = max_line_width
 
         hover_diag_win.buf_id = api.nvim_create_buf(false, true)
         api.nvim_buf_set_lines(hover_diag_win.buf_id, 0, -1, false,
-                               lines_for_float)
+                               lines_for_hover)
         api.nvim_set_option_value("modifiable", false,
                                   {buf = hover_diag_win.buf_id})
 
@@ -135,8 +135,8 @@ local function hover_diagnostic(_, bufnr)
             relative = "win",
             win = current_win,
             anchor = "NE",
-            width = float_width,
-            height = float_height,
+            width = hover_width,
+            height = hover_height,
             row = 1,
             col = win_width - 1,
             focusable = false,
