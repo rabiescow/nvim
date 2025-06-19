@@ -1,11 +1,10 @@
 return {
-    'saghen/blink.cmp',
+    "saghen/blink.cmp",
     -- optional: provides snippets for the snippet source
     dependencies = {
-        'rafamadriz/friendly-snippets', 'echasnovski/mini.icons',
-        'xzbdmw/colorful-menu.nvim', 'niuiic/blink-cmp-rg.nvim', 'LuaSnip'
+        "rafamadriz/friendly-snippets", "xzbdmw/colorful-menu.nvim",
+        "niuiic/blink-cmp-rg.nvim", "L3MON4D3/LuaSnip", "echasnovski/mini.icons"
     },
-
     -- use a release tag to download pre-built binaries
     version = '1.*',
     -- AND/OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
@@ -96,12 +95,11 @@ return {
                 window = {border = "rounded"}
             }
         },
-        -- snippets = { preset = 'luasnip' },
 
         -- Default list of enabled providers defined so that you can extend it
         -- elsewhere in your config, without redefining it, due to `opts_extend`
         sources = {
-            default = {"lsp", "path", "buffer", "snippets", "ripgrep"},
+            default = {"lsp", "snippets", "path", "buffer"},
             providers = {
                 path = {
                     name = "Path",
@@ -131,16 +129,6 @@ return {
                         end
                         return new_items
                     end
-                },
-                ripgrep = {
-                    name = "Ripgrep",
-                    module = "blink-cmp-rg",
-                    score_offset = 2
-                },
-                buffer = {
-                    name = "Buffer",
-                    module = "blink.cmp.sources.buffer",
-                    score_offset = 1
                 },
                 snippets = {
                     name = "Snippets",
@@ -174,6 +162,16 @@ return {
                             return filetype
                         end
                     }
+                },
+                -- ripgrep = {
+                --     name = "Ripgrep",
+                --     module = "blink-cmp-rg",
+                --     score_offset = 2
+                -- },
+                buffer = {
+                    name = "Buffer",
+                    module = "blink.cmp.sources.buffer",
+                    score_offset = 1
                 }
             }
         },
