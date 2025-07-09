@@ -1,8 +1,11 @@
+-- order of which to load the modules
 require("config/options")
-require("config/keymaps")
 require("config/utils")
+require("config/keymaps")
 require("config/function")
-require("config/autocmd")
+require("config/definitions")
 
 require("./lazy")
 require("./lsp")
+
+require("config/autocmd")

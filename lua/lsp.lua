@@ -29,6 +29,7 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
 		local filetype = args.match
 		local server = servers[filetype]
 		if server then
+			vim.notify("Detected filetype: " .. filetype .. ", server: " .. server)
 			vim.lsp.enable(server, true)
 		end
 	end,

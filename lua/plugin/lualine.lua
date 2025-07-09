@@ -85,7 +85,7 @@ return {
 			sources = { "nvim_diagnostic" },
 			sections = { "error", "warn", "info", "hint" },
 			symbols = {
-				error = " ",
+				error = " ",
 				warn = " ",
 				info = " ",
 				hint = "󰠠 ",
@@ -97,7 +97,7 @@ return {
 
 		local lsp = {
 			"lsp_status",
-			icon = "",
+			icon = "",
 			symbols = {
 				spinner = {
 					"∙∙∙",

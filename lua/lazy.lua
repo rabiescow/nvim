@@ -28,7 +28,7 @@ require("lazy").setup({
 	git = {
 		log = { "-8" },
 		timeout = 120,
-		url_format = "git@github.com:%s.git",
+		url_format = "https://www.github.com/%s.git",
 		filter = true,
 		throttle = {
 			enabled = false,
