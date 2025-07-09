@@ -4,15 +4,8 @@ return {
 		"rafamadriz/friendly-snippets",
 		"xzbdmw/colorful-menu.nvim",
 		"niuiic/blink-cmp-rg.nvim",
-		-- LuaSnip has it's own config file
-		-- {
-		-- 	"L3MON4D3/LuaSnip",
-		-- 	lazy = false,
-		-- 	dependencies = { "kmarius/jsregexp" },
-		-- 	-- tag = "v2.*",
-		-- 	build = "make install_jsregexp",
-		-- },
-		"echasnovski/mini.icons",
+		"nvim-tree/nvim-web-devicons",
+		"onsails/lspkind.nvim",
 	},
 	version = "1.*",
 	build = "cargo build --release",
@@ -26,7 +19,6 @@ return {
 			["<S-Tab>"] = { "select_prev", "fallback" },
 			["<S-Enter>"] = { "accept" },
 		},
-
 		appearance = {
 			highlight_ns = vim.api.nvim_create_namespace("blink_cmp"),
 			use_nvim_cmp_as_default = false,
@@ -82,11 +74,28 @@ return {
 						kind_icon = {
 							ellipsis = false,
 							text = function(ctx)
-								local kind_icon, _, _ = require("mini.icons").get("lsp", ctx.kind)
-								return kind_icon
+								local lspkind = require("lspkind")
+								local icon = ctx.kind_icon
+								if vim.tbl_contains({ "Path" }, ctx.source_name) then
+									local dev_icon, _ = require("nvim-web-devicons").get_icon(ctx.label)
+									if dev_icon then
+										icon = dev_icon
+									end
+								else
+									icon = require("lspkind").symbolic(ctx.kind, {
+										mode = "symbol",
+									})
+								end
+								return icon .. ctx.icon_gap
 							end,
 							highlight = function(ctx)
-								local _, hl, _ = require("mini.icons").get("lsp", ctx.kind)
+								local hl = ctx.kind_hl
+								if vim.tbl_contains({ "Path" }, ctx.source_name) then
+									local dev_icon, dev_hl = require("nvim-web-devicons").get_icon(ctx.label)
+									if dev_icon then
+										hl = dev_hl
+									end
+								end
 								return hl
 							end,
 						},
@@ -214,8 +223,8 @@ return {
 			trigger = {
 				prefetch_on_insert = true,
 				show_in_snippet = true,
-				show_on_backspace = false,
-				show_on_backspace_in_keyword = false,
+				show_on_backspace = true,
+				show_on_backspace_in_keyword = true,
 				show_on_backspace_after_accept = true,
 				show_on_backspace_after_insert_enter = true,
 				show_on_keyword = true,
