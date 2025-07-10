@@ -1,6 +1,12 @@
 ; Forked from tree-sitter-go
 ; Copyright (c) 2014 Max Brunsfeld (The MIT License)
 ;
+
+
+(import_spec
+    path: (interpreted_string_literal
+    (interpreted_string_literal_content))(#set! priority 131))  @import
+
 ; Identifiers
 (type_identifier) @type
 

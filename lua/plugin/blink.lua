@@ -55,21 +55,25 @@ return {
 			menu = {
 				enabled = true,
 				min_width = 20,
-				max_height = 14,
-				border = "rounded",
+				max_height = 10,
+				border = "none",
 				winblend = 0,
-				winhighlight = "Normal:None,FloatBorder:BlinkCmpDocBorder,CursorLine:CursorLine,Search:None",
-				scrolloff = 2,
-				scrollbar = true,
+				winhighlight = "Normal:Pmenu,FloatBorder:BlinkCmpDocBorder,CursorLine:CursorLine,Search:Search",
+				scrolloff = 0,
+				scrollbar = false,
 				direction_priority = { "s", "n" },
 				auto_show = true,
 				draw = {
 					align_to = "label",
-					padding = 1,
-					gap = 2,
+					padding = { 1, 0 },
+					gap = 1,
 					cursorline_priority = 16000,
 					treesitter = { "lsp" },
-					columns = { { "kind_icon", gap = 1 }, { "label", gap = 3 } },
+					columns = {
+						{ "kind_icon", gap = 1 },
+						{ "label", "label_description", gap = 1 },
+						{ "kind" },
+					},
 					components = {
 						kind_icon = {
 							ellipsis = false,
@@ -133,27 +137,27 @@ return {
 								end
 								return highlights
 							end,
-							label_description = {
-								width = { max = 30 },
-								text = function(ctx)
-									return ctx.label_description
-								end,
-								highlight = "BlinkCmpLabelDescription",
-							},
-							source_name = {
-								width = { max = 30 },
-								text = function(ctx)
-									return ctx.source_name
-								end,
-								highlight = "BlinkCmpSource",
-							},
-							source_id = {
-								width = { max = 30 },
-								text = function(ctx)
-									return ctx.source_id
-								end,
-								highlight = "BlinkCmpSource",
-							},
+						},
+						label_description = {
+							width = { max = 30 },
+							text = function(ctx)
+								return ctx.label_description
+							end,
+							highlight = "BlinkCmpLabelDescription",
+						},
+						source_name = {
+							width = { max = 30 },
+							text = function(ctx)
+								return ctx.source_name
+							end,
+							highlight = "BlinkCmpSource",
+						},
+						source_id = {
+							width = { max = 30 },
+							text = function(ctx)
+								return ctx.source_id
+							end,
+							highlight = "BlinkCmpSource",
 						},
 					},
 				},
@@ -170,7 +174,7 @@ return {
 					min_width = 10,
 					max_width = 80,
 					max_height = 20,
-					border = "rounded",
+					border = "single",
 					winblend = 0,
 					winhighlight = "Normal:BlinkCmpDoc,FloatBorder:BlinkCmpDocBorder,EndOfBuffer:BlinkCmpDoc",
 					scrollbar = true,
@@ -244,11 +248,11 @@ return {
 				blocked_trigger_characters = {},
 				blocked_retrigger_characters = {},
 				show_on_trigger_character = true,
-				show_on_insert = false,
+				show_on_insert = true,
 				show_on_insert_on_trigger_character = true,
 			},
 			window = {
-				min_width = 1,
+				min_width = 10,
 				max_width = 100,
 				max_height = 10,
 				border = "rounded",
@@ -257,7 +261,7 @@ return {
 				scrollbar = false,
 				direction_priority = { "n", "s" },
 				treesitter_highlighting = true,
-				show_documentation = true,
+				show_documentation = false,
 			},
 		},
 		fuzzy = {
@@ -286,7 +290,19 @@ return {
 			},
 		},
 		sources = {
-			default = { "lsp", "snippets", "omni", "path", "buffer" },
+			default = function(ctx)
+				local success, node = pcall(vim.treesitter.get_node)
+				if
+					success
+					and node
+					and vim.tbl_contains({ "comment", "line_comment", "block_comment" }, node:type())
+				then
+					return { "buffer" }
+				else
+					return { "lsp", "snippets", "omni", "path" }
+				end
+			end,
+			-- default = { "lsp", "snippets", "omni", "path", "buffer" },
 			providers = {
 				lsp = {
 					enabled = true,
@@ -320,10 +336,13 @@ return {
 					opts = {
 						trailing_slash = true,
 						label_trailing_slash = true,
-						get_cwd = function(context)
-							return vim.fn.expand(("#%d:p:h"):format(context.bufnr))
+						-- get_cwd = function(context)
+						-- 	return vim.fn.expand(("#%d:p:h"):format(context.bufnr))
+						-- end,
+						get_cwd = function(ctx)
+							return vim.fn.getcwd(ctx.winnr or 0)
 						end,
-						show_hidden_files_by_default = false,
+						show_hidden_files_by_default = true,
 						ignore_root_slash = false,
 					},
 				},

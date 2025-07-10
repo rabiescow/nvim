@@ -9,12 +9,12 @@
 
 (open_module
   module: (module_path
-    (module_name) @keyword.module.name))
+    (module_name)  @keyword.module.name))
 
 (application_expression
   function: (value_path
     (module_path
-      (module_name) @keyword.module.name)
+      (module_name (#set! priority 145)) @keyword.module.name)
   ))
 
 ; Types
