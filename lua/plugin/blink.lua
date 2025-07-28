@@ -86,7 +86,7 @@ return {
 										icon = dev_icon
 									end
 								else
-									icon = require("lspkind").symbolic(ctx.kind, {
+									icon = lspkind.symbolic(ctx.kind, {
 										mode = "symbol",
 									})
 								end
@@ -114,7 +114,7 @@ return {
 							end,
 						},
 						label = {
-							width = { fill = true, min = 10, max = 40 },
+							width = { fill = true, min = 10, max = 20 },
 							text = function(ctx)
 								return ctx.label .. ctx.label_detail
 							end,
@@ -127,10 +127,11 @@ return {
 									},
 								}
 								if ctx.label_detail then
-									table.insert(
-										highlights,
-										{ #ctx.label, #ctx.label .. ctx.label_detail, group = "BlinkCmpLabelDetail" }
-									)
+									table.insert(highlights, {
+										#ctx.label,
+										#ctx.label + #ctx.label_detail,
+										group = "BlinkCmpLabelDetail",
+									})
 								end
 								for _, idx in ipairs(ctx.label_matched_indices) do
 									table.insert(highlights, { idx, idx + 1, group = "BlinkCmpLabelMatch" })
@@ -205,20 +206,10 @@ return {
 			accept = {
 				dot_repeat = true,
 				create_undo_point = true,
-				resolve_timeout = 100,
+				-- resolve_timeout = 100,
 				auto_brackets = {
 					enabled = false,
 					default_brackets = { "(", ")" },
-				},
-				override_brackets_for_filetypes = {},
-				kind_resolution = {
-					enabled = true,
-					blocked_filetypes = { "typescriptreact", "javascriptreact", "vue" },
-				},
-				semantic_token_resolution = {
-					enabled = true,
-					blocked_filetypes = { "java" },
-					timeout_ms = 400,
 				},
 			},
 			keyword = {

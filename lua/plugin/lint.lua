@@ -9,7 +9,7 @@ return {
 			-- erlang = {"elvis"},
 			elixir = { "credo" },
 			fortran = { "fortitude" },
-			go = { "golangcilint" },
+			-- go = { "golangcilint" },
 			haskell = { "hlint" },
 			javascript = { "eslint_d" },
 			-- lua = {"luacheck", args = {"--read-globals vim require"}},

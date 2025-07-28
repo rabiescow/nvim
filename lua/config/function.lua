@@ -5,23 +5,19 @@ local function hover_diagnostic(_, bufnr)
 	local hover_diag_win = {
 		win_id = nil,
 		buf_id = nil,
-		ns_id = api.nvim_create_namespace("HoverHighlights"), -- A namespace for our paint job.
+		ns_id = api.nvim_create_namespace("HoverHighlights"),
 	}
 
-	--- Wraps a given string to a specified width.
-	--- Respects existing newlines and attempts to break on word boundaries.
-	---@param text string The text to wrap.
-	---@param width integer The maximum width of a line.
-	---@return table<string> A list of strings, one for each wrapped line.
+	---@param text string
+	---@param width integer
+	---@return table<string>
 	local function wrap_text(text, width)
 		local lines = {}
-		-- Respect existing newlines in the message
 		for s in text:gmatch("[^\r\n]+") do
 			local start = 1
 			while start <= #s do
 				local break_pos = start + width
 				if break_pos < #s then
-					-- Try to find the last space before the break position to wrap at a word
 					local last_space = s:sub(start, break_pos):match(".*%s")
 					if last_space then
 						break_pos = start + #last_space - 1

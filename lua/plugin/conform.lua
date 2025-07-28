@@ -47,7 +47,7 @@ return {
 		notify_on_error = true,
 		notify_no_formatters = true,
 		formatters = {
-			ocamlformat = {
+			["ocamlformat"] = {
 				prepend_args = {
 					"--if-then-else",
 					"--vertical",
@@ -57,7 +57,11 @@ return {
 					"--sparse",
 				},
 			},
-			-- dart = { prepend_args = { "format" } },
+			["clang-format"] = {
+				prepend_args = {
+					"--style={BasedOnStyle: GNU, IndentWidth: 4}",
+				},
+			},
 		},
 	},
 	init = function()

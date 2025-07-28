@@ -52,7 +52,7 @@ opt.swapfile = true
 opt.backup = true
 opt.backupcopy = "yes"
 opt.backupext = ".tmp"
-opt.backupdir = vim.fn.expand(os.getenv("HOME") .. "/nvim/backup")
+opt.backupdir = vim.fn.expand(vim.fs.env("XDG_STATE_HOME") .. "/nvim/backup")
 
 -- Don't show the mode, since it's already in the status line
 opt.showmode = false
@@ -96,11 +96,3 @@ vim.api.nvim_set_option_value("clipboard", "unnamedplus", { scope = "global" })
 -- Command line options
 vim.o.cmdheight = 0
 vim.o.cmdwinheight = 10
-
--- disable perl and ruby
-vim.g.loaded_ruby_provider = 0
--- vim.g.ruby_host_prof = "/usr/sbin/ruby"
-vim.g.loaded_perl_provider = 0
-vim.g.perl_host_prof = "/usr/sbin/perl"
-vim.g.loaded_python3_provider = 0
-vim.g.python3_host_prof = "/usr/sbin/python3"

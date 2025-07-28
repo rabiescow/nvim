@@ -1,4 +1,12 @@
 {
+  "err": {
+    "body": [
+      "if err != nil {",
+      "    log.panic(\"err > %v\", err)",
+      "}"
+    ],
+    "prefix": "err"
+  },
   "pac + pack + packa + packag + package + package \"\"": {
     "body": "package $1",
     "prefix": [

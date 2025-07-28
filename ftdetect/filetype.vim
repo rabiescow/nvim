@@ -13,6 +13,10 @@ au BufRead,BufNewFile go.work set filetype=gowork
 au! BufRead,BufNewFile *.mod,*.MOD
 au BufRead,BufNewFile *.mod,*.MOD set filetype=gomod
 
+au BufRead,BufNewFile *.as set filetype=angelscript
+au BufRead,BufNewFile *.as set ft=angelscript
+au BufRead,BufNewFile */ghostty/config set ft=ghostty
+
 let &cpo = s:cpo_save
 unlet s:cpo_save
 

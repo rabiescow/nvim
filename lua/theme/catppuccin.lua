@@ -74,26 +74,41 @@ return {
 						italic = true,
 					},
 					["DiagnosticUnderlineError"] = {
-						fg = colors.base,
-						bg = colors.red,
+						fg = colors.text,
+						bg = U.darken(colors.red, 0.15, colors.base),
+						underline = false,
+						nocombine = true,
 					},
 					["DiagnosticUnderlineWarn"] = {
-						fg = colors.base,
-						bg = colors.peach,
+						fg = colors.text,
+						bg = U.darken(colors.peach, 0.15, colors.base),
+						underline = false,
+						nocombine = true,
 					},
 					["DiagnosticUnderlineHint"] = {
-						fg = colors.base,
-						bg = colors.teal,
+						fg = colors.text,
+						bg = U.darken(colors.teal, 0.15, colors.base),
+						underline = false,
+						nocombine = true,
 					},
 					["DiagnosticUnderlineInfo"] = {
-						fg = colors.base,
-						bg = colors.blue,
+						fg = colors.text,
+						bg = U.darken(colors.blue, 0.15, colors.base),
+						underline = false,
+						nocombine = true,
 					},
+
+					["@variable.name.angelscript"] = { fg = colors.maroon },
+					["@variable.binary.angelscript"] = { fg = colors.maroon },
+					["@variable.module.angelscript"] = { fg = colors.subtext1, italic = true },
+					["@type.builtin.angelscript"] = { fg = colors.pink },
+					["@variable.angelscript"] = { fg = colors.lavender },
+					["@variable.argument.angelscript"] = { fg = colors.peach },
+					["@punctuation.separator.angelscript"] = { fg = colors.flamingo },
 
 					LspCodeLens = { fg = colors.hint, bold = true, italic = true }, -- virtual text of the codelens
 					LspInlayHint = { fg = colors.hint, italic = true }, -- virtual text of the inlay hints
 					CursorLine = {
-						-- fg = U.darken(colors.lavender, 0.3, colors.text),
 						bg = U.brighten(colors.crust, 0.25, colors.base),
 					},
 
