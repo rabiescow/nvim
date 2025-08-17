@@ -1,14 +1,25 @@
+local filetypes = { "haskell", "lhaskell" }
+local root_markers = {
+	"hie.yaml",
+	"stack.yaml",
+	"cabal.project",
+	"*.cabal",
+	"package.yaml",
+}
+
+---@type vim.lsp.Config
 return {
+	enable = true,
+	name = "hls",
 	cmd = { "haskell-language-server-wrapper", "--lsp" },
-	filetypes = { "haskell", "lhaskell" },
-	root_markers = {
-		"hie.yaml",
-		"stack.yaml",
-		"cabal.project",
-		"*.cabal",
-		"package.yaml",
-	},
+	filetypes = filetypes,
+	root_dir = vim.fs.dirname(vim.fs.find(root_markers, { upward = true })[1]),
+	root_markers = root_markers,
+	log_level = vim.lsp.protocol.MessageType.Warning,
+	trace = "messages",
 	single_file_support = true,
+	capabilities = require("utils.capabilities").complete(),
+	on_attach = require("utils.attach").on,
 	settings = {
 		haskell = {
 			checkParents = "CheckOnSave",
@@ -62,6 +73,4 @@ return {
 			},
 		},
 	},
-	capabilities = get_complete_capabilities(),
-	on_attach = attach,
 }

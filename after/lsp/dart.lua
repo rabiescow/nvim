@@ -1,7 +1,19 @@
+local filetypes = { "dart" }
+local root_markers = { "pubspec.yaml", "analysis_options.yaml", ".dart_tool" }
+
+---@type vim.lsp.Config
 return {
+	enable = true,
+	name = "Dart LSP",
 	cmd = { "dart", "language-server", "--protocol=lsp" },
-	filetypes = { "dart" },
-	root_markers = { "pubspec.yaml", "analysis_options.yaml", ".dart_tool" },
+	filetypes = filetypes,
+	root_markers = root_markers,
+	root_dir = vim.fs.dirname(vim.fs.find(root_markers, { upward = true })[1]),
+	trace = "verbose",
+	log_level = vim.lsp.protocol.MessageType.Warning,
+	single_file_support = true,
+	capabilities = require("utils.capabilities").complete(),
+	on_attach = require("utils.attach").on,
 	init_options = {
 		additionalAnalyzerFileExtensions = { ".proto" },
 		allowAnalytics = true,
@@ -115,6 +127,4 @@ return {
 			showTodos = true,
 		},
 	},
-	capabilities = get_complete_capabilities(),
-	on_attach = attach,
 }

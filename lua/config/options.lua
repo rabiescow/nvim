@@ -1,83 +1,46 @@
-local opt = vim.opt -- for conciseness
-
--- line numbers
-opt.relativenumber = true -- show relative line numbers
-opt.number = true -- shows absolute line number on cursor line (when relative number is on)
-
--- enable save history
+local opt = vim.opt
+opt.relativenumber = true
+opt.number = true
 opt.undofile = true
-
--- tabs & indentation
-opt.expandtab = true -- expand tab to spaces
-opt.shiftwidth = 4 -- 4 spaces for indent width
-opt.tabstop = 4 -- 4 spaces for tabs (prettier default)
-opt.softtabstop = 4 -- How many spaces are applied when pressing Tab
+opt.expandtab = true
+opt.shiftwidth = 4
+opt.tabstop = 4
+opt.softtabstop = 4
 opt.smarttab = true
 opt.smartindent = true
-opt.autoindent = true -- copy indent from current line when starting new one
+opt.autoindent = true
 opt.breakindent = true
-
--- line wrapping
-opt.wrap = false -- disable line wrapping
-
--- search settings
-opt.ignorecase = true -- ignore case when searching
-opt.smartcase = true -- if you include mixed case in your search, assumes you want case-sensitive
+opt.whichwrap = "b,s,h,l,<,>,[,]"
+opt.wrap = false
+opt.ignorecase = true
+opt.smartcase = true
 opt.incsearch = true
 opt.hlsearch = true
-
--- cursor line
-opt.cursorline = true -- highlight the current cursor line
---
--- Enable mouse mode, can be useful for resizing splits for example!
+opt.cursorline = true
 opt.mouse = "a"
-
--- turn on termguicolors for nightfly colorscheme to work
--- (have to use iterm2 or any other true color terminal)
 opt.termguicolors = true
-opt.background = "dark" -- colorschemes that can be light or dark will be made dark
-opt.signcolumn = "yes" -- show sign column so that text doesn't shift
-
--- backspace
-opt.backspace = "indent,eol,start,nostop" -- allow backspace on indent, end of line or insert mode start position
-
--- split windows
-opt.splitright = true -- split vertical window to the right
-opt.splitbelow = true -- split horizontal window to the bottom
-
--- use swapfile
+opt.background = "dark"
+opt.signcolumn = "yes"
+opt.backspace = "indent,eol,start,nostop"
+opt.splitright = true
+opt.splitbelow = true
 opt.swapfile = true
-
--- use backup file
 opt.backup = true
 opt.backupcopy = "yes"
 opt.backupext = ".tmp"
-opt.backupdir = vim.fn.expand(os.getenv("HOME") .. "/nvim/backup")
-
--- Don't show the mode, since it's already in the status line
+opt.backupdir = vim.fn.stdpath("state") .. "/backup"
+opt.undofile = true
+opt.undodir = vim.fn.stdpath("state") .. "/undo"
 opt.showmode = false
-
--- Better splitting
 opt.splitbelow = true
 opt.splitright = true
-
--- Set completeopt to have a better completion experience
 opt.completeopt = { "menuone", "noselect" }
-
--- Decrease updatetime to 200ms
 opt.updatetime = 50
 opt.timeoutlen = 300
-
--- Enable cursor line highlight
 opt.cursorline = true
-
--- Always keep x lines above/below cursor unless at start/end of file
 opt.scrolloff = 1
-
--- Place a column line
+opt.sidescrolloff = 10
 opt.colorcolumn = "80"
-
--- Sets how neovim will display certain whitespace in the editor.
 opt.list = true
 opt.listchars = {
 	eol = "⤶",
@@ -86,20 +49,16 @@ opt.listchars = {
 	tab = ">-",
 	trail = "●",
 }
-
--- this is for obsidian to work properly
 opt.conceallevel = 1
+opt.clipboard = "unnamedplus"
+opt.cmdheight = 0
+opt.cmdwinheight = 10
+opt.fileencoding = "utf-8"
+opt.pumheight = 10
+opt.guifont = "monospaced:h17"
 
--- clipboard provider
-vim.api.nvim_set_option_value("clipboard", "unnamedplus", { scope = "global" })
-
--- Command line options
-vim.o.cmdheight = 0
-vim.o.cmdwinheight = 10
-
--- disable perl and ruby
 vim.g.loaded_ruby_provider = 0
--- vim.g.ruby_host_prof = "/usr/sbin/ruby"
+vim.g.ruby_host_prof = "/usr/sbin/ruby"
 vim.g.loaded_perl_provider = 0
 vim.g.perl_host_prof = "/usr/sbin/perl"
 vim.g.loaded_python3_provider = 0

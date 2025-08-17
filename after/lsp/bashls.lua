@@ -1,0 +1,36 @@
+---@type vim.lsp.Config
+return {
+	enable = true,
+	name = "bash-language-server",
+	cmd = { "bash-language-server", "start" },
+	filetypes = { "sh", "bash" },
+	root_dir = vim.fn.environ()["PWD"],
+	log_level = vim.lsp.protocol.MessageType.Warning,
+	trace = "verbose",
+	single_file_support = true,
+	capabilities = require("utils.capabilities").complete(),
+	on_attach = require("utils.attach").on,
+	settings = {
+		bashIde = {
+			backgroundAnalysisMaxFiles = 0,
+			enableSourceErrorDiagnostics = true,
+			globPattern = vim.env.GLOB_PATTERN or "*@(.sh|.inc|.bash|.command)",
+			explainshellEndpoint = "",
+			logLevel = vim.NIL,
+			includeAllWorkspaceSymbols = true,
+			shellcheckArguments = vim.NIL,
+			shellcheckPath = vim.NIL,
+			shfmt = {
+				path = "/usr/bin/shfmt",
+				ignoreEditorconfig = false,
+				languageDialect = "bash",
+				binaryNextLine = false,
+				caseIndent = false,
+				funcNextLine = false,
+				keepPadding = false,
+				simplifyCode = false,
+				spaceRedirects = false,
+			},
+		},
+	},
+}

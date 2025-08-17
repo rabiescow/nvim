@@ -3,6 +3,8 @@ vim.g.mapleader = "`"
 
 local keymap = vim.keymap -- for conciseness
 
+keymap.set("n", "<leader>zz", "<CMD>lua require('config.utils').zen()<CR>", { noremap = true, silent = true, desc = "set zenmode" })
+
 keymap.set("n", "K", function()
 	local width, height = get_editor_dimensions()
 	local function toint(f)

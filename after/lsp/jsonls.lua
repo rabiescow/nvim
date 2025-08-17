@@ -1,13 +1,20 @@
+---@type vim.lsp.Config
 return {
-    cmd = {'vscode-json-language-server', '--stdio'},
-    filetypes = {'json', 'jsonc'},
-    settings = {
-        json = {
-            validate = {enable = true},
-            schemas = require('schemastore').json.schemas()
-        }
-    },
-    single_file_support = true,
-    capabilities = get_complete_capabilities(),
-    on_attach = attach
+	enable = true,
+	name = "json-language-server",
+	cmd = { "vscode-json-language-server", "--stdio" },
+	filetypes = { "json", "jsonc" },
+	root_dir = vim.fn.environ()["PWD"],
+	log_level = vim.lsp.protocol.MessageType.Warning,
+	trace = "verbose",
+	single_file_support = true,
+	capabilities = require("utils.capabilities").complete(),
+	on_attach = require("utils.attach").on,
+	settings = {
+		json = {
+			validate = { enable = true },
+			format = { enable = true },
+			schemas = require("schemastore").json.schemas(),
+		},
+	},
 }

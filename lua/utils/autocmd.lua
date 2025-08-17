@@ -36,11 +36,11 @@ vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold" }, {
 	group = vim.api.nvim_create_augroup("LspDiagnostics", { clear = true }),
 
 	callback = function()
-		local currentWidth, _ = get_editor_dimensions()
+		local currentWidth, _ = require("utils.utils").get_editor_dimensions()
 		local diagnosticsWidth = math.floor(math.abs(currentWidth / 2))
 		local diagnosticsHeight = 8
 		local diagnosticsColumn = currentWidth - (diagnosticsWidth + 3)
-		local diagnosticsRow = get_diagnostics_position(diagnosticsHeight)
+		local diagnosticsRow = require("utils.utils").get_diagnostics_position(diagnosticsHeight)
 		local hoverOpts = {
 			focusable = false,
 			close_events = {
@@ -110,12 +110,3 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
 })
 
 -- local hover_diag_notify_augroup = vim.api.nvim_create_augroup(
---                                       "CustomHoverDiagnosticsNotify",
---                                       {clear = true})
---
--- vim.api.nvim_create_autocmd("CursorHold", {
---     group = hover_diag_notify_augroup,
---     pattern = "*",
---     callback = show_hover_diagnostic_via_notify,
---     desc = "Show diagnostics via notify on hover"
--- })

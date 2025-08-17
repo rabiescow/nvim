@@ -40,41 +40,20 @@ return {
 				},
 			}
 
-			-- dap.adapters.haskell = {
-			--     type = 'executable',
-			--     command = 'haskell-debug-adapter',
-			--     args = {'--hackage-version=0.0.33.0'}
-			-- }
-			-- dap.configurations.haskell = {
-			--     {
-			--         type = 'haskell',
-			--         request = 'launch',
-			--         name = 'Debug',
-			--         workspace = '${workspaceFolder}',
-			--         startup = "${file}",
-			--         stopOnEntry = true,
-			--         logFile = vim.fn.stdpath('data') .. '/haskell-dap.log',
-			--         logLevel = 'WARNING',
-			--         ghciEnv = vim.empty_dict(),
-			--         ghciPrompt = "λ: ",
-			--         -- Adjust the prompt to the prompt you see when you invoke the stack ghci command below
-			--         ghciInitialPrompt = "λ: ",
-			--         ghciCmd = "stack ghci --test --no-load --no-build --main-is TARGET --ghci-options -fprint-evld-with-show"
-			--     }
-			-- }
-
 			dap.adapters["local-lua"] = {
 				type = "executable",
 				command = "node",
 				args = {
-					"/absolute/path/to/local-lua-debugger-vscode/extension/debugAdapter.js",
+					vim.fn.environ()["HOME"]
+						.. "/.vscode/extensions/tomblind.local-lua-debugger-vscode-0.3.3-universal/extension/debugAdapter.js",
 				},
 				enrich_config = function(config, on_config)
 					if not config["extensionPath"] then
 						local c = vim.deepcopy(config)
 						-- 💀 If this is missing or wrong you'll see
 						-- "module 'lldebugger' not found" errors in the dap-repl when trying to launch a debug session
-						c.extensionPath = "/absolute/path/to/local-lua-debugger-vscode/"
+						c.extensionPath = vim.fn.environ()["HOME"]
+							.. "/.vscode/extensions/tomblind.local-lua-debugger-vscode-0.3.3-universal/"
 						on_config(c)
 					else
 						on_config(config)

@@ -15,6 +15,8 @@ return {
 			-- lua = {"luacheck", args = {"--read-globals vim require"}},
 			markdown = { "markdownlint" },
 			python = { "pylint" },
+			-- qml = { "qmllint" },
+			ruby = { "rubocop" },
 			-- rust = { "clippy" },
 			typescript = { "eslint_d" },
 			sh = { "shellcheck" },

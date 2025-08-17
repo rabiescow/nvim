@@ -1,1 +1,1 @@
-vim.lsp.enable("zls")
+vim.lsp.enable("zls", true)

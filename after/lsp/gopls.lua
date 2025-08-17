@@ -1,9 +1,21 @@
+local filetypes = { "go", "gomod", "gowork", "gotmpl", "gosum" }
+local root_markers = { "go.mod", "main.go", "go.env", "*_test.g", ".git", ".gitignore", ".gitattributes" }
+local command = { "gopls" }
+
+---@type vim.lsp.Config
 return {
-	cmd = { "gopls" }, -- Command to start the language server
-	filetypes = { "go", "gomod", "gowork", "gotmpl", "gosum" }, -- File types that this server will handle
-	root_markers = { "go.mod", "go.work", ".git" }, -- Markers to identify the root of the project
+	enable = true,
+	name = "gopls",
+	cmd = command,
+	filetypes = filetypes,
+	root_markers = root_markers,
+	root_dir = vim.fs.dirname(vim.fs.find(root_markers, { upward = true })[1]),
+	log_level = vim.lsp.protocol.MessageType.Warning,
+	trace = "messages",
 	single_file_support = true,
-	settings = { -- Settings for the language server
+	capabilities = require("utils.capabilities").complete(),
+	on_attach = require("utils.attach").on,
+	settings = {
 		gopls = {
 			gofumpt = true,
 			codelenses = {
@@ -101,6 +113,4 @@ return {
 			semanticTokens = true,
 		},
 	},
-	capabilities = get_complete_capabilities(),
-	on_attach = attach,
 }

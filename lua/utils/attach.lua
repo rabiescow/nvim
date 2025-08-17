@@ -1,4 +1,6 @@
-local function hover_diagnostic(_, bufnr)
+local M = {}
+
+local function hover_diagnostic(client, bufnr)
 	local api = vim.api
 	local fn = vim.fn
 
@@ -144,34 +146,36 @@ local function hover_diagnostic(_, bufnr)
 
 	local hover_diag_augroup = api.nvim_create_augroup("HoverDiagnostics", { clear = true })
 
-	api.nvim_create_autocmd({
-		"CursorHold",
-		"BufEnter",
-		"LspAttach",
-		"ModeChanged",
-		"SafeState",
-	}, {
-		group = hover_diag_augroup,
-		buffer = bufnr,
-		callback = function()
-			show_hover_diagnostic_float()
-		end,
-		desc = "Show hover diagnostics in corner",
-	})
+	if client.server_capabilities.diagnosticProvider then
+		api.nvim_create_autocmd({
+			"CursorHold",
+			"BufEnter",
+			"LspAttach",
+			"ModeChanged",
+			"SafeState",
+		}, {
+			group = hover_diag_augroup,
+			buffer = bufnr,
+			callback = function()
+				show_hover_diagnostic_float()
+			end,
+			desc = "Show hover diagnostics in corner",
+		})
 
-	api.nvim_create_autocmd({ "CursorMoved", "BufLeave", "ModeChanged" }, {
-		group = hover_diag_augroup,
-		buffer = bufnr,
-		callback = function()
-			clear_hover_diagnostic_float()
-		end,
-		desc = "Clear hover diagnostics",
-	})
+		api.nvim_create_autocmd({ "CursorMoved", "BufLeave", "ModeChanged" }, {
+			group = hover_diag_augroup,
+			buffer = bufnr,
+			callback = function()
+				clear_hover_diagnostic_float()
+			end,
+			desc = "Clear hover diagnostics",
+		})
+	end
 end
 
 local function code_lens(client, bufnr)
 	local augroup = vim.api.nvim_create_augroup("LSPCodeLens", { clear = true })
-	local codelens = require("config.codelens")
+	local codelens = require("utils.code_lens")
 
 	-- Code Lens provider config
 	if client.server_capabilities.codeLensProvider then
@@ -216,8 +220,10 @@ local function inlay_hints(client, bufnr)
 	end
 end
 
-function attach(client, bufnr)
+function M.on(client, bufnr)
 	code_lens(client, bufnr)
 	inlay_hints(client, bufnr)
 	hover_diagnostic(client, bufnr)
 end
+
+return M

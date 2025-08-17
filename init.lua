@@ -1,11 +1,9 @@
 -- order of which to load the modules
-require("config/options")
-require("config/utils")
-require("config/keymaps")
-require("config/function")
-require("config/definitions")
-
+require("config.options")
+require("config.keymaps")
 require("./lazy")
 require("./lsp")
+require("utils.autocmd")
 
-require("config/autocmd")
+package.path = package.path .. ";" .. require("utils.utils").get_rocks_paths(false)
+package.cpath = package.cpath .. ";" .. require("utils.utils").get_rocks_paths(true)

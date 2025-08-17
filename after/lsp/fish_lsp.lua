@@ -1,8 +1,16 @@
+local filetypes = { "fish" }
+local command = { "fish-lsp", "start" }
+
+---@type vim.lsp.Config
 return {
-    cmd = {"fish-lsp", "start"},
-    cmd_env = {fish_lsp_show_client_popups = false},
-    filetypes = {"fish"},
-    single_file_support = true,
-    capabilities = get_complete_capabilities(),
-    on_attach = attach
+	enable = true,
+	name = "fish-lsp",
+	cmd = command,
+	cmd_env = { fish_lsp_show_client_popups = false },
+	filetypes = filetypes,
+	single_file_support = true,
+	trace = "verbose",
+	log_level = vim.lsp.protocol.MessageType.Warning,
+	capabilities = require("utils.capabilities").complete(),
+	on_attach = require("utils.attach").on,
 }

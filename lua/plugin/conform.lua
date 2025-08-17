@@ -19,6 +19,7 @@ return {
 	opts = {
 		ft_parsers = { jsonc = "json" },
 		formatters_by_ft = {
+			bash = { "shfmt" },
 			c = { "clang-format" },
 			cpp = { "clang-format" },
 			dart = { "dart_format" },
@@ -34,6 +35,8 @@ return {
 			markdown = { "markdownlint" },
 			ocaml = { "ocp-indent", "ocamlformat" },
 			python = { "isort" },
+			qml = { "qmlformat" },
+			ruby = { "rubyfmt" },
 			rust = { "rustfmt", lsp_format = "fallback" },
 			sh = { "shfmt" },
 			toml = { "taplo" },

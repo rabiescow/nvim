@@ -5,3 +5,5 @@ vim.bo.expandtab = true
 vim.bo.autoindent = false
 vim.bo.smartindent = false
 vim.bo.cindent = true
+
+vim.lsp.enable("lua_ls", { enable = true })

@@ -114,7 +114,8 @@ return {
 							end,
 						},
 						label = {
-							width = { fill = true, min = 10, max = 20 },
+							width = { fill = false, min = 20, max = 50 },
+							-- width = { fill = true, min = 10, max = 20 },
 							text = function(ctx)
 								return ctx.label .. ctx.label_detail
 							end,
@@ -193,7 +194,7 @@ return {
 				show_without_menu = true,
 			},
 			list = {
-				max_items = 20,
+				max_items = 50,
 				selection = {
 					preselect = true,
 					auto_insert = true,
@@ -290,7 +291,7 @@ return {
 				then
 					return { "buffer" }
 				else
-					return { "lsp", "snippets", "omni", "path" }
+					return { "lsp", "path", "snippets", "omni" }
 				end
 			end,
 			-- default = { "lsp", "snippets", "omni", "path", "buffer" },
