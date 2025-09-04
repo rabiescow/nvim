@@ -146,31 +146,31 @@ local function hover_diagnostic(client, bufnr)
 
 	local hover_diag_augroup = api.nvim_create_augroup("HoverDiagnostics", { clear = true })
 
-	if client.server_capabilities.diagnosticProvider then
-		api.nvim_create_autocmd({
-			"CursorHold",
-			"BufEnter",
-			"LspAttach",
-			"ModeChanged",
-			"SafeState",
-		}, {
-			group = hover_diag_augroup,
-			buffer = bufnr,
-			callback = function()
-				show_hover_diagnostic_float()
-			end,
-			desc = "Show hover diagnostics in corner",
-		})
+	-- if client.server_capabilities.diagnosticProvider then
+	api.nvim_create_autocmd({
+		"CursorHold",
+		"BufEnter",
+		"LspAttach",
+		"ModeChanged",
+		"SafeState",
+	}, {
+		group = hover_diag_augroup,
+		buffer = bufnr,
+		callback = function()
+			show_hover_diagnostic_float()
+		end,
+		desc = "Show hover diagnostics in corner",
+	})
 
-		api.nvim_create_autocmd({ "CursorMoved", "BufLeave", "ModeChanged" }, {
-			group = hover_diag_augroup,
-			buffer = bufnr,
-			callback = function()
-				clear_hover_diagnostic_float()
-			end,
-			desc = "Clear hover diagnostics",
-		})
-	end
+	api.nvim_create_autocmd({ "CursorMoved", "BufLeave", "ModeChanged" }, {
+		group = hover_diag_augroup,
+		buffer = bufnr,
+		callback = function()
+			clear_hover_diagnostic_float()
+		end,
+		desc = "Clear hover diagnostics",
+	})
+	-- end
 end
 
 local function code_lens(client, bufnr)
@@ -216,7 +216,7 @@ local function inlay_hints(client, bufnr)
 			end,
 		})
 	else
-		print("no inlay hints available")
+		vim.notify("no inlay hints available", 0)
 	end
 end
 

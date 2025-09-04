@@ -174,6 +174,14 @@ return {
 					OilSize = { fg = colors.text },
 					OilType = { fg = colors.yellow, italic = true },
 					OilMtime = { fg = colors.flamingo, italic = true },
+
+					-- UfoFoldedBg = { bg = colors.crust },
+					UfoFoldedBg = { bg = "#010101" },
+					UfoFoldedFg = { fg = colors.peach },
+					UfoCursorFoldedLine = { bg = colors.crust },
+					-- UfoPreviewCursorLine = { bg = colors.crust },
+					UfoPreviewCursorLine = { bg = "#220303" },
+					UfoPreviewThumb = { bg = colors.surface0 },
 				}
 			end,
 			default_integrations = true,
@@ -196,6 +204,7 @@ return {
 					enabled = true,
 					inlay_hints = { background = false },
 				},
+				ufo = true,
 			},
 		})
 		return M

@@ -1,2 +1,6 @@
+-- Configuration for Lua files.
+
+local ft = require("utils.editopts")
 vim.lsp.enable("lua_ls", true)
-require("utils.ftplugin").setOpt("foldmarker", "-->,--<")
+-- ft.setOpt("foldmethod", "expr")
+-- ft.setOpt("foldmarker", "v:lua.vim.treesitter.foldexpr()")

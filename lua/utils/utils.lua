@@ -1,5 +1,29 @@
 local M = {}
 
+function M.get_definition_hover_opts()
+	local width, height = M.get_editor_dimensions()
+	local function toint(f)
+		if f > 0 then
+			return math.floor(f)
+		else
+			return math.ceil(f)
+		end
+	end
+	return {
+		offset_x = 10000,
+		offset_y = 0,
+		max_width = toint(width / 3),
+		max_height = toint(height / 3),
+		focusable = true,
+		focus = true,
+		close_events = { "InsertEnter", "InsertLeave", "CursorMoved", "CursorMovedI" },
+		border = "single",
+		title = "definition:",
+		title_pos = "left",
+		relative = "editor",
+	}
+end
+
 ---@param c boolean
 ---@return string
 function M.get_rocks_paths(c)
@@ -19,6 +43,7 @@ end
 
 ---@param list table<any>
 ---@param element any
+---
 ---@return boolean
 function M.contains(list, element)
 	for _, elem in ipairs(list) do

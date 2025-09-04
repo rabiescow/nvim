@@ -171,7 +171,6 @@ function M.display(lenses, bufnr, client_id)
 				virt_lines = { chunks },
 				virt_lines_above = true,
 			})
-			-- {virt_text = chunks, hl_mode = 'combine'})
 		end
 	end
 end
@@ -231,9 +230,6 @@ local function resolve_lenses(lenses, bufnr, client_id, callback)
 			client:request(ms.codeLens_resolve, lens, function(_, result)
 				if api.nvim_buf_is_loaded(bufnr) and result and result.command then
 					lens.command = result.command
-					-- Eager display to have some sort of incremental feedback
-					-- Once all lenses got resolved there will be a full redraw for all lenses
-					-- So that multiple lens per line are properly displayed
 
 					local num_lines = api.nvim_buf_line_count(bufnr)
 					if lens.range.start.line <= num_lines then
@@ -275,10 +271,9 @@ end
 
 --- @class vim.lsp.codelens.refresh.Opts
 --- @inlinedoc
---- @field bufnr integer? filter by buffer. All buffers if nil, 0 for current buffer
+--- @field bufnr integer?
 
 --- Refresh the lenses.
----
 --- It is recommended to trigger this using an autocmd or via keymap.
 ---
 --- Example:

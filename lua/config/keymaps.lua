@@ -3,33 +3,13 @@ vim.g.mapleader = "`"
 
 local keymap = vim.keymap -- for conciseness
 
-keymap.set("n", "<leader>zz", "<CMD>lua require('config.utils').zen()<CR>", { noremap = true, silent = true, desc = "set zenmode" })
-
-keymap.set("n", "K", function()
-	local width, height = get_editor_dimensions()
-	local function toint(f)
-		if f > 0 then
-			return math.floor(f)
-		else
-			return math.ceil(f)
-		end
+keymap.set("n", "F", function()
+	local hoverOpts = require("utils.utils").get_definition_hover_opts()
+	local winid = require("ufo").peekFoldedLinesUnderCursor()
+	if not winid then
+		require("utils.definitions").definition_hover(hoverOpts)
 	end
-	local hoverOpts = {
-		offset_x = 10000,
-		offset_y = 10000,
-		max_width = toint(width / 3),
-		max_height = toint(height / 3),
-		focusable = true,
-		focus = true,
-		close_events = { "InsertEnter", "InsertLeave", "CursorMoved", "CursorMovedI" },
-		border = "single",
-		title = "definition:",
-		title_pos = "left",
-		relative = "editor",
-	}
-	local def = require("config/definitions")
-	def.definition_hover(hoverOpts)
-end, { desc = [[ show lsp definitions ]] })
+end, { noremap = true, silent = true, desc = [[ show lsp definitions ]] })
 -- use jk to exit insert mode
 keymap.set("i", "jk", "<ESC>", { desc = "Exit insert mode with jk" })
 -- clear search highlights
@@ -46,3 +26,7 @@ keymap.set("n", "<leader>z", "<CMD>wq<CR>", { silent = false })
 keymap.set("n", "-", "<CMD>Oil --float<CR>", { desc = "Browse current working directory" })
 -- select all
 keymap.set("n", "<C-a>", "ggVG", { desc = "the windows select all" })
+
+-- ufo folding commands
+vim.keymap.set("n", "®", require("ufo").openAllFolds, { desc = "open all folds" })
+vim.keymap.set("n", "Þ", require("ufo").closeAllFolds, { desc = "close all fodls" })

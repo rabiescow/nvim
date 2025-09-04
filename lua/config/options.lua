@@ -46,7 +46,7 @@ opt.listchars = {
 	eol = "⤶",
 	nbsp = "˾",
 	space = "∙",
-	tab = ">-",
+	tab = "> ",
 	trail = "●",
 }
 opt.conceallevel = 1
@@ -56,6 +56,13 @@ opt.cmdwinheight = 10
 opt.fileencoding = "utf-8"
 opt.pumheight = 10
 opt.guifont = "monospaced:h17"
+
+opt.foldcolumn = "1"
+opt.foldlevel = 99
+opt.foldlevelstart = 99
+opt.foldenable = true
+opt.foldmethod = "indent"
+opt.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
 
 vim.g.loaded_ruby_provider = 0
 vim.g.ruby_host_prof = "/usr/sbin/ruby"

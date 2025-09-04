@@ -1,3 +1,12 @@
+-- -- peek folded lines under cursor on hover
+-- vim.api.nvim_create_autocmd({ "CursorHold" }, {
+-- 	group = vim.api.nvim_create_augroup("UfoFoldingHover", { clear = true }),
+-- 	callback = function()
+-- 		require("ufo").peekFoldedLinesUnderCursor()
+-- 	end,
+-- })
+
+-- naming of backups
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
 	group = vim.api.nvim_create_augroup("UpdateTimestampOnBackup", { clear = true }),
 	callback = function()
@@ -5,7 +14,8 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
 	end,
 })
 
-vim.api.nvim_create_autocmd("User", {
+-- get oil on startup
+vim.api.nvim_create_autocmd({ "User" }, {
 	group = vim.api.nvim_create_augroup("OilOnUserEventForStartup", { clear = true }),
 	pattern = "StartupNvimReady",
 	callback = function(args)
@@ -31,61 +41,6 @@ vim.api.nvim_create_autocmd("User", {
 	desc = "Open Oil in a float when the startup dashboard is ready",
 })
 
-vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold" }, {
-	buffer = 0,
-	group = vim.api.nvim_create_augroup("LspDiagnostics", { clear = true }),
-
-	callback = function()
-		local currentWidth, _ = require("utils.utils").get_editor_dimensions()
-		local diagnosticsWidth = math.floor(math.abs(currentWidth / 2))
-		local diagnosticsHeight = 8
-		local diagnosticsColumn = currentWidth - (diagnosticsWidth + 3)
-		local diagnosticsRow = require("utils.utils").get_diagnostics_position(diagnosticsHeight)
-		local hoverOpts = {
-			focusable = false,
-			close_events = {
-				"BufLeave",
-				"CursorMoved",
-				"InsertEnter",
-				"FocusLost",
-			},
-			scope = "line",
-			header = "Line diagnostics:",
-			width = diagnosticsWidth,
-			height = diagnosticsHeight,
-			max_heigth = diagnosticsHeight,
-		}
-		local secondaryOpts = {
-			focusable = false,
-			close_events = {
-				"BufLeave",
-				"CursorMoved",
-				"InsertEnter",
-				"FocusLost",
-			},
-			source = "always",
-		}
-		local dialog = {
-			relative = "win",
-			win = vim.api.nvim_get_current_win(),
-			anchor = "NW",
-			row = diagnosticsRow,
-			col = diagnosticsColumn,
-			focusable = false,
-			title = "Line Diagnostics",
-			title_pos = "center",
-			fixed = true,
-			border = "rounded",
-		}
-		local _, windownr = vim.diagnostic.open_float(hoverOpts, secondaryOpts)
-		if windownr ~= nil then
-			local config = vim.api.nvim_win_get_config(windownr)
-			config = vim.tbl_extend("force", config, dialog)
-			vim.api.nvim_win_set_config(windownr, config)
-		end
-	end,
-})
-
 -- highlight last yank
 vim.api.nvim_create_autocmd("TextYankPost", {
 	desc = "highlight when yanking text",
@@ -95,12 +50,14 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	end,
 })
 
+-- writing to shada when deleting
 vim.api.nvim_create_autocmd({ "BufDelete", "BufWipeout" }, {
 	group = vim.api.nvim_create_augroup("wshada_on_delete", { clear = true }),
 	desc = "Write to ShaDa when deleting/wiping out buffers",
 	command = "wshada",
 })
 
+-- showcasing hexcolors with the color as the background
 vim.api.nvim_create_autocmd({ "BufEnter" }, {
 	group = vim.api.nvim_create_augroup("Colorizer", { clear = true }),
 	desc = "showcase color backgrounds for hexcodes",
@@ -108,5 +65,3 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
 		vim.cmd([[ ColorizerToggle ]])
 	end,
 })
-
--- local hover_diag_notify_augroup = vim.api.nvim_create_augroup(

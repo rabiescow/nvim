@@ -4,10 +4,18 @@ local root_markers = { ".git", ".qmlformat.ini", ".qmllint.ini", ".qmlls.ini" }
 ---@type vim.lsp.Config
 return {
 	enable = true,
-	name = "qmlls6",
-	cmd = { "qmlls6" },
+	name = "qmlls",
+	cmd = {
+		"qmlls",
+		"--no-cmake-calls",
+		"-E",
+		"-d",
+		"/usr/share/doc/qt6",
+		"-b",
+		"/usr/lib/qt6/qml",
+	},
 	cmd_env = {
-		QT_QML_GENERATE_QMLLS_INI = true,
+		QT_QML_GENERATE_QMLLS_INI = ON,
 		QMLLS_BUILD_DIRS = vim.fn.environ()["PWD"] .. "/build",
 		QT_QML_OUTPUT_DIRECTORY = vim.fn.environ()["PWD"],
 	},
@@ -19,4 +27,5 @@ return {
 	single_file_support = true,
 	capabilities = require("utils.capabilities").complete(),
 	on_attach = require("utils.attach").on,
+	on_new_config = nil,
 }

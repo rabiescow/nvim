@@ -27,7 +27,7 @@ return {
 			elm = { "elm_format" },
 			fish = { "fish_indent" },
 			fortran = { "fprettify", "findent" },
-			go = { "goimports", "gofmt", "golines" },
+			-- go = { "goimports", "gofmt", "golines" },
 			haskell = { "hindent" },
 			java = { "google-java-format" },
 			json = { "jq", "fixjson" },

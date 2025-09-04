@@ -36,6 +36,7 @@ return {
 	single_file_support = true,
 	capabilities = require("utils.capabilities").complete(),
 	on_attach = require("utils.attach").on,
+	on_new_config = nil,
 	settings = {
 		Lua = {
 			telemetry = { enable = false },
