@@ -22,7 +22,7 @@ return {
 		zls = {
 			enable_build_on_save = false,
 			semantic_tokens = "partial",
-			zig_exe_path = executable_path("zig"),
+			zig_exe_path = require("utils.utils").executable_path("zig"),
 		},
 	},
 }
