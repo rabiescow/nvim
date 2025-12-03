@@ -2,7 +2,6 @@ return {
     "j-hui/fidget.nvim",
     config = function()
         require("fidget").setup({
-            -- Options related to LSP progress subsystem
             progress = {
                 poll_rate = 0,
                 suppress_on_insert = true,
@@ -17,19 +16,13 @@ return {
                 end,
                 ignore = {},
 
-                -- Options related to how LSP progress messages are displayed as notifications
                 display = {
                     render_limit = 16,
                     done_ttl = 3,
-                    done_icon = "  󱓵 ",
+                    done_icon = " 󱓵 ",
                     done_style = "FidgetDone",
                     progress_ttl = math.huge,
                     progress_icon = {
-                        -- {
-                        --     " ⢰  ", " ⠸  ", " ⠘⠁ ", " ⠈⠉ ",
-                        --     "  ⠙ ", "  ⠸ ", "  ⢰ ", "  ⣠ ", " ⢀⣀ ",
-                        --     " ⢠⡀ "
-                        -- }
                         {
                             "∙∙∙∙", "●∙∙∙", "∙●∙∙",
                             "∙∙●∙", "∙∙∙●"
@@ -47,11 +40,9 @@ return {
                     format_group_name = function(group)
                         return tostring(group)
                     end,
-                    overrides = {rust_analyzer = {name = "rust-analyzer"}}
+                    overrides = { rust_analyzer = { name = "rust-analyzer" } }
                 },
-
-                -- Options related to Neovim's built-in LSP client
-                lsp = {progress_ringbuf_size = 0, log_handler = false}
+                lsp = { progress_ringbuf_size = 0, log_handler = false }
             },
 
             -- Options related to notification subsystem
@@ -62,7 +53,7 @@ return {
                 override_vim_notify = true,
                 configs = {
                     name = "Notifications",
-                    icon = "  󱓧 ",
+                    icon = " 󱓧 ",
                     ttl = 5,
                     group_style = "FidgetGroup",
                     icon_style = "FidgetIcon",
@@ -87,7 +78,6 @@ return {
                     end
                 end,
 
-                -- Options related to how notifications are rendered as text
                 view = {
                     stack_upwards = true,
                     icon_separator = " ",
@@ -122,7 +112,7 @@ return {
                 max_size = 10000,
                 float_precision = 0.01,
                 path = string.format("%s/fidget.nvim.log",
-                                     vim.fn.stdpath("cache"))
+                    vim.fn.stdpath("cache"))
             }
         })
     end
