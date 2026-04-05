@@ -115,10 +115,10 @@ return {
             "recording",
             fmt = function(str)
                 local reg = vim.fn.reg_recording()
-                if reg ~= "" then
-                    return "󰑋  RECORDING @" .. reg
+                if reg == "" then
+                    return ""
                 end
-                return str
+                return "󰑋  RECORDING @" .. reg
             end
         }
 
