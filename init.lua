@@ -5,6 +5,7 @@ require("config.keymaps")
 require(".lsp")
 require("utils.autocmd")
 local util = require("utils.utils")
+util.center_buffer()
 
 package.path = package.path .. ";" .. util.get_rocks_paths(false)
 package.cpath = package.cpath .. ";" .. util.get_rocks_paths(true)

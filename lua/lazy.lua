@@ -50,7 +50,7 @@ require("lazy").setup({
     },
     install = {
         missing = true,
-        colorscheme = { "compline", "catppuccin", "tokyonight", "habamax" },
+        colorscheme = { "catppuccin", "tokyonight", "habamax" },
     },
     ui = {
         size = { width = 0.9, height = 0.9 },
@@ -160,5 +160,4 @@ require("lazy").setup({
 })
 
 vim.o.background = "dark"
--- vim.cmd.colorscheme("catppuccin")
-vim.cmd.colorscheme("compline")
+vim.cmd.colorscheme("catppuccin")

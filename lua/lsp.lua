@@ -18,7 +18,7 @@ vim.api.nvim_create_autocmd(
                 go = "gopls",
                 haskell = "hls",
                 html = "html",
-                hypr = "hyprls",
+                -- hypr = "hyprls",
                 javascript = "ts_ls",
                 json = "jsonls",
                 lua = "lua_ls",
