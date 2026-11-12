@@ -1,7 +1,7 @@
 return {
 	"yamatsum/nvim-cursorline",
 	config = function()
-		local U = require("catppuccin.utils.colors")
+		-- local U = require("catppuccin.utils.colors")
 		require("nvim-cursorline").setup({
 			cursorline = { enable = true, timeout = 300, number = true },
 			cursorword = {

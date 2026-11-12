@@ -196,7 +196,7 @@ return {
 					colored_indent_levels = false,
 				},
 				lualine = require("lualine").setup({
-					options = { theme = "catppuccin" },
+					options = { theme = "catppuccin-mocha" },
 				}),
 				treesitter = true,
 				mini = { enabled = true, indentscope_color = "" },
