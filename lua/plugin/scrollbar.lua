@@ -1,5 +1,5 @@
 return {
-	"ptertriho/nvim-scrollbar",
+	"petertriho/nvim-scrollbar",
 	dependencies = {},
 	config = function()
 		require("scrollbar").setup({
@@ -14,7 +14,7 @@ return {
 				text = " ",
 				blend = 30, -- Integer between 0 and 100. 0 for fully opaque and 100 to full transparent. Defaults to 30.
 				color = nil,
-				color_nr = nil, -- cterm
+				color_nr = nil,
 				highlight = "CursorColumn",
 				hide_if_all_visible = true, -- Hides handle if all lines are visible
 			},
@@ -25,7 +25,7 @@ return {
 					gui = nil,
 					color = nil,
 					cterm = nil,
-					color_nr = nil, -- cterm
+					color_nr = nil,
 					highlight = "Normal",
 				},
 				Search = {

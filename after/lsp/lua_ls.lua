@@ -1,3 +1,6 @@
+local capabilities = require("utils.capabilities")
+local attach = require("utils.attach")
+
 ---@return string: returns the version
 function luarocks_version()
 	local status_ok, version =
@@ -34,8 +37,8 @@ return {
 	log_level = vim.lsp.protocol.MessageType.Warning,
 	trace = "messages",
 	single_file_support = true,
-	capabilities = require("utils.capabilities").complete(),
-	on_attach = require("utils.attach").on,
+	capabilities = capabilities.complete(),
+	on_attach = attach.on,
 	on_new_config = nil,
 	settings = {
 		Lua = {

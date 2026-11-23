@@ -1,4 +1,7 @@
 local root_markers = { "zls.json", "build.zig", ".git" }
+local utils = require("utils.utils")
+local capabilities = require("utils.capabilities")
+local attach = require("utils.attach")
 
 ---@type vim.lsp.Config
 return {
@@ -11,8 +14,8 @@ return {
 	log_level = vim.lsp.protocol.MessageType.Warning,
 	trace = "messages",
 	single_file_support = true,
-	capabilities = require("utils.capabilities").complete(),
-	on_attach = require("utils.attach").on,
+	capabilities = capabilites.complete(),
+	on_attach = attach.on,
 	on_new_config = function(new_config, new_root_dir)
 		if vim.fn.filereadable(vim.fs.joinpath(new_root_dir, "zls.json")) ~= 0 then
 			new_config.cmd = { "zls", "--config-path", "zls.json" }
@@ -22,7 +25,7 @@ return {
 		zls = {
 			enable_build_on_save = false,
 			semantic_tokens = "partial",
-			zig_exe_path = require("utils.utils").executable_path("zig"),
+			zig_exe_path = utils.executable_path("zig"),
 		},
 	},
 }

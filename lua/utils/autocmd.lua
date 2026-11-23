@@ -6,6 +6,16 @@
 -- 	end,
 -- })
 
+-- fallback commentstring
+vim.api.nvim_create_autocmd({ "FileType", "BufEnter" }, {
+	group = vim.api.nvim_create_augroup("FallbackComment", { clear = true }),
+	callback = function()
+		if vim.bo.commentstring == "" then
+			vim.bo.commentstring = "# %s"
+		end
+	end,
+})
+
 -- naming of backups
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
 	group = vim.api.nvim_create_augroup("UpdateTimestampOnBackup", { clear = true }),

@@ -27,6 +27,8 @@ local command = {
 	"--function-arg-placeholders=true",
 	"--log=verbose",
 }
+local capabilities = require("utils.capabilities")
+local attach = require("utils.attach")
 
 ---@type vim.lsp.Config
 return {
@@ -38,8 +40,7 @@ return {
 	root_dir = vim.fs.dirname(vim.fs.find(root_markers, { upward = true })[1]),
 	single_file_support = true,
 	log_level = vim.lsp.protocol.MessageType.Warning,
-	-- capabilities = require("utils.capabilities").complete(),
-	capabilities = require("utils.capabilities").complete(),
-	on_attach = require("utils.attach").on,
+	capabilities = capabilities.complete(),
+	on_attach = attach.on,
 	on_new_config = nil,
 }

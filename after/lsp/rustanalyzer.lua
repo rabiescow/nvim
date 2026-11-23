@@ -42,6 +42,8 @@ local default_snippets = [[ {
 
 local filetypes = { "rust" }
 local root_markers = { "Cargo.toml", "rust-project.json" }
+local capabilities = require("utils.capabilities")
+local attach = require("utils.attach")
 
 ---@type vim.lsp.Config
 return {
@@ -54,8 +56,8 @@ return {
 	log_level = vim.lsp.protocol.MessageType.Warning,
 	trace = "messages",
 	single_file_support = true,
-	capabilities = require("utils.capabilities").complete(),
-	on_attach = require("utils.attach").on,
+	capabilities = capabilities.complete(),
+	on_attach = attach.on,
 
 	before_init = function(params, config)
 		if config.settings and config.settings["rust-analyzer"] then

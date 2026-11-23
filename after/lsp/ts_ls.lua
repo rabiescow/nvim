@@ -7,6 +7,8 @@ local filetypes = {
 	"typescript.tsx",
 }
 local root_markers = { "tsconfig.json", "jsconfig.json", "package.json", ".git" }
+local capabilities = require("utils.capabilities")
+local attach = require("utils.attach")
 
 ---@type vim.lsp.Config
 return {
@@ -20,6 +22,6 @@ return {
 	log_level = vim.lsp.protocol.MessageType.Warning,
 	trace = "messages",
 	single_file_support = true,
-	capabilities = require("utils.capabilities").complete(),
-	on_attach = require("utils.attach").on,
+	capabilities = capabilities.complete(),
+	on_attach = attach.on,
 }

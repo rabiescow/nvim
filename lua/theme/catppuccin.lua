@@ -6,7 +6,7 @@ return {
 		local M = require("catppuccin")
 		local U = require("catppuccin.utils.colors")
 		M.setup({
-			flavour = "mocha", -- latte, frappe, macchiato, mocha
+			flavour = "mocha",
 			background = { light = "latte", dark = "mocha" },
 			transparent_background = false,
 			show_end_of_buffer = false,
@@ -21,7 +21,7 @@ return {
 				loops = {},
 				functions = {},
 				keywords = {},
-				strings = {},
+				strings = { "italic" },
 				variables = {},
 				numbers = {},
 				booleans = {},

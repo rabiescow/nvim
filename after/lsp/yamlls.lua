@@ -1,3 +1,6 @@
+local capabilities = require("utils.capabilities")
+local attach = require("utils.attach")
+
 ---@type vim.lsp.Config
 return {
 	enable = true,
@@ -8,8 +11,8 @@ return {
 	log_level = vim.lsp.protocol.MessageType.Warning,
 	trace = "verbose",
 	single_file_support = true,
-	capabilities = require("utils.capabilities").complete(),
-	on_attach = require("utils.attach").on,
+	capabilities = capabilities.complete(),
+	on_attach = attach.on,
 	settings = {
 		yaml = {
 			-- Using the schemastore plugin for schemas.
